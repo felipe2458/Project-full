@@ -4,9 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../public/CSS/register_user.css">
+    <title>Register</title>
 </head>
 <body>
-    <h1>register</h1>
+    <form method="post" action="/register">
+        <header><h1>Register</h1></header>
+
+        <div class="container-inputs">
+            <div class="container-input-err">
+                <div class="input-wraper">
+                    <input type="text" name="username" id="username">
+                    <label for="username">Username</label>
+                </div><!-- input-wraper -->
+            </div><!-- container-input-err -->
+
+            <div class="container-input-err">
+                <div class="input-wraper">
+                    <input type="password" name="password" id="password">
+                    <label for="password">Password</label>
+                </div><!-- input-wraper -->
+            </div><!-- container-input-err -->
+
+            <div class="container-input-err">
+                <div class="input-wraper">
+                    <input type="password" name="confirm_password" id="confirm_password">
+                    <label for="confirm_password">Confirm password</label>
+                </div><!-- input-wraper -->
+            </div><!-- container-input-err -->
+
+            <div class="input-button-wraper">
+                <input type="submit" value="Create">
+            </div><!-- input-button-wraper -->
+
+            <div class="container-login">
+                <p>Already have an account? <a href="/login">Login</a> </p>
+            </div><!-- container-login -->
+        </div><!-- container-inputs -->
+    </form>
 </body>
+<script src="../public/JS/JQuery.js"></script>
+<script src="../public/JS/register_user.js"></script>
 </html>
