@@ -6,7 +6,7 @@
 }
 
 html,body{
-    height: 100vh;
+    height: 100%;
 }
 
 :root{
@@ -23,7 +23,6 @@ body{
     background-size: cover;
 }
 
-
 form{
     width: 100%;
     max-width: 500px;
@@ -35,10 +34,10 @@ form{
 }
 
 form header{
-    min-width: 100%;
+    width: 100%;
     height: 100px;
-    text-align: center;
     line-height: 100px;
+    text-align: center;
 }
 
 form header h1{
@@ -46,7 +45,7 @@ form header h1{
     font-weight: 400;
 }
 
-form .container-inputs{
+form .container-input{
     width: 100%;
     height: calc(100% - 100px);
     display: flex;
@@ -56,17 +55,158 @@ form .container-inputs{
     gap: 45px;
 }
 
-form .container-inputs .container-input-err{
+form .container-input .container-input-err{
     width: 100%;
     height: 40px;
 }
 
-form .container-inputs .input-wraper{
+form .container-input .input-wraper{
     width: 100%;
     height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
 }
 
-.container-inputs .input-wraper input{
-    width: 90%;
+.wraper-container-input{
+    width: 80%;
     height: 100%;
+    position: relative;
+}
+
+.input-wraper .wraper-container-input input{
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 0 45px 0 20px;
+    line-height: 45px;
+    color: whitesmoke;
+    position: absolute;
+    transition: box-shadow 0.5s;
+}
+
+#name{
+    box-shadow: 0 0 3px var(--box-shadow-color-input_one);
+    color: var(--box-shadow-color-input_one);
+}
+
+#password{
+    box-shadow: 0 0 3px var(--box-shadow-color-input_two);
+    color: var(--box-shadow-color-input_two);
+}
+
+#password-confirm{
+    box-shadow: 0 0 3px var(--box-shadow-color-input_three);
+    color: var(--box-shadow-color-input_three);
+}
+
+#name:focus{
+    box-shadow: 0 0 10px var(--box-shadow-color-input_one);
+}
+
+#password:focus{
+    box-shadow: 0 0 10px var(--box-shadow-color-input_two);
+}
+
+#password-confirm:focus{
+    box-shadow: 0 0 10px var(--box-shadow-color-input_three);
+}
+
+.wraper-container-input input:focus ~ label{
+    top: -13px;
+}
+
+.input-wraper .wraper-container-input label{
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translate(0, -50%);
+    transition: top 0.3s;
+}
+
+.input-wraper .wraper-container-input .icon{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translate(0, -50%);
+    background-size: cover;
+    background-image: url(../images/icons/user_icon.svg);
+}
+
+.input-wraper .wraper-container-input .icon-pass{
+    background-image: url(../images/icons/view_password.svg);
+    cursor: pointer;
+}
+
+.focus-input{
+    top: -13px !important;
+}
+
+.button-wraper{
+    width: 100%;
+    height: 45px;
+    margin-top: -10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-wraper input{
+    width: 80%;
+    height: 95%;
+    background-color: whitesmoke;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    color: black;
+    font-family: "Open Sans", sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.button-wraper input:hover{
+    transform: scale(1.05);
+}
+
+.container-input .login{
+    margin-top: -10px;
+}
+
+.container-input .login p a{
+    color: wheat;
+    text-decoration: none;
+}
+
+.container-input .login p a:hover{
+    text-decoration: underline;
+}
+
+.container-input-err .erro-msg-wraper{
+    width: 100%;
+    padding: 5px 0 0 65px;
+}
+
+.erro-msg{
+    color: red;
+    text-shadow: 0 0 2px red, 0 0 4px red;
+    font-size: 13px;
+}
+
+.view-password::before{
+    content: "";
+    width: 3px;
+    height: 100%;
+    background-color: whitesmoke;
+    display: block;
+    position: relative;
+    left: calc(50% - 1.5px);
+    top: 2px;
+    transform: rotate(45deg) translateX(-50%);
 }
