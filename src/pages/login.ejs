@@ -4,9 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../public/CSS/login.css">
+    <title>Fazer login</title>
 </head>
 <body>
-    <h1>Login</h1>
+    <form method="post" action="/login">
+        <header><h1>Login</h1></header>
+
+        <div class="container-input">
+            <div class="container-err-input">
+                <div class="input-wraper" id="container-name">
+                    <div class="container-input-label">
+                        <input type="text" name="name_login" id="name_login">
+                    <label for="name_login" id="name_login_label">Username</label>
+                    </div><!-- container-input-label -->
+                </div><!-- input-wraper -->
+                <div class="err-msg-wraper">
+                    <p class="erro-msg" id="name_err">O campo não pode estar vazio.</p>
+                </div><!-- err-msg-wraper -->
+            </div><!-- container-err-input -->
+
+            <div class="container-err-input">
+                <div class="input-wraper" id="container-password">
+                    <div class="container-input-label">
+                        <input type="password" name="password_login" id="password_login">
+                        <label for="password_login" id="password_login_label">Password</label>
+                    </div><!-- container-input-label -->
+                </div><!-- input-wraper -->
+                <div class="err-msg-wraper segundo">
+                    <p class="erro-msg" id="password_err">O campo não pode estar vazio.</p>
+                </div><!-- err-msg-wraper -->
+            </div><!-- container-err-input -->
+
+            <div class="remember">
+                <input type="checkbox" name="remember" id="remember">
+                <label for="remember">Remember me</label>
+            </div><!-- remember -->
+
+            <div class="button-wraper">
+                <input type="submit" name="action_login" value="Login">
+            </div><!-- button-wraper -->
+
+            <div class="create">
+                <p>Don't have an account? <a href="/create-user">Sing up</a></p>
+            </div><!-- create -->
+        </div><!-- container-input -->
+    </form>
 </body>
+<script src="../public/JS/JQuery.js"></script>
+<script src="../public/JS/login.js"></script>
 </html>
