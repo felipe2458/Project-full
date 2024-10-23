@@ -1,15 +1,11 @@
-const router = require('express').Router();
+const router = require('express').Router({mergeParams: true});
 
 router.get('/', (req, res)=>{
-    res.render('home.ejs');
-});
-
-router.get('/login', (req, res)=>{
-    res.render('login.ejs');
-});
-
-router.post('/login', ()=>{
-    res.send('Olá mundo!');
+    if(req.session.user.name === req.params.user){
+        return res.render('page_initial.ejs');
+    }else{
+        return res.redirect('/login');
+    }
 });
 
 module.exports = router;
