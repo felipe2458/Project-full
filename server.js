@@ -80,7 +80,12 @@ app.post('/login', async (req, res)=>{
 
         if(bcrypt.compare(req.body.password_login.trim(), user.password)){
             req.session.user = user;
-            return res.redirect(`/${user.name}`);
+
+            if(await user.name.includes('_')){
+                return res.redirect(`/${user.name.split('_').join('-')}`);
+            }else{
+                return res.redirect(`${user.name}`);
+            }
         }else{
             return res.redirect('/login');
         }
@@ -88,6 +93,10 @@ app.post('/login', async (req, res)=>{
         console.log('Erro ao validar login:', err);
         return res.status(500).send('Erro ao validar login. Tente novamente. <a href="/">Voltar</a>');
     }
+});
+
+app.get('/teste', (req, res)=>{
+    res.render('page_initial.ejs');
 });
 
 app.use('/:user', router);

@@ -34,6 +34,14 @@ $(function(){
             }else if(nameVal.length > 100){
                 errorMsg.text('O nome tem que ter entre 10 e 100 caracteres.');
                 root.css('--box-shadow-color-input_one', '#a10000');
+            }else if(nameVal.includes('.') || nameVal.includes('/') || nameVal.includes('\\') || nameVal.includes('?') || nameVal.includes('*') || nameVal.includes(':') || nameVal.includes('"') || nameVal.includes('|') || nameVal.includes('#') || nameVal.includes('%') || nameVal.includes('$') || nameVal.includes('&') || nameVal.includes('+') || nameVal.includes('@') || nameVal.includes('!') || nameVal.includes('{') || nameVal.includes('}') || nameVal.includes('[') || nameVal.includes(']') || nameVal.includes('(') || nameVal.includes(')') || nameVal.includes('^') || nameVal.includes('=') || nameVal.includes(';') || nameVal.includes(':') || nameVal.includes(',') || nameVal.includes('‘') || nameVal.includes('’') || nameVal.includes('“') || nameVal.includes('”')){
+                errorMsg.text('O nome não pode ter caracteres especiais. Com a exceção de "_".');
+                root.css('--box-shadow-color-input_one', '#a10000');
+                enviUser = false;
+            }else if(nameVal.includes(" ")){
+                errorMsg.text('O nome não pode conter espaços.');
+                root.css('--box-shadow-color-input_one', '#a10000');
+                enviUser = false;
             }else if(nameVal.length < 100 && nameVal.length > 10){
                 errorMsg.text('');
                 root.css('--box-shadow-color-input_one', '#00e000');
