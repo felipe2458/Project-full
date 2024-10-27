@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const fileupload = require('express-fileupload');
 const bcrypt = require('bcrypt');
 const User = require('./mongoose/User');
 const router = require('./router/routers');
@@ -27,6 +28,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 60000 }
+}));
+
+app.use(fileupload({
+    useTempFiles: true,
+    tempFileDir: '/tmp',
+    limits: {
+        fileSize: 1024 * 1024 * 500
+    }
 }));
 
 app.engine('html',require('ejs').renderFile);
@@ -93,10 +102,6 @@ app.post('/login', async (req, res)=>{
         console.log('Erro ao validar login:', err);
         return res.status(500).send('Erro ao validar login. Tente novamente. <a href="/">Voltar</a>');
     }
-});
-
-app.get('/teste', (req, res)=>{
-    res.render('page_initial.ejs');
 });
 
 app.use('/:user', router);

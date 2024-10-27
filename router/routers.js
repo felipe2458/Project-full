@@ -1,5 +1,6 @@
+const fs = require('fs');
+const path = require('path');
 const router = require('express').Router({mergeParams: true});
-const Icon_user = require('../mongoose/Icons');
 
 router.get('/', (req, res)=>{
     if(req.session.user.name){
@@ -14,6 +15,35 @@ router.get('/', (req, res)=>{
         }
     }else{
         return res.redirect('/login');
+    }
+});
+
+router.get('/configuracoes', (req, res)=>{
+    res.render('config_user.ejs', {username: req.params.user});
+});
+
+router.post(`/upload-icon`, async (req, res)=>{
+    try{
+        if(!req.files.photo_icon){
+            return res.status(500).send('Erro ao enviar o arquivo');
+        }
+
+        const formato = req.files.photo_icon.name.split('.');
+        const fileExtension = formato[formato.length - 1];
+        const usernameDir = path.join(path.basename(__dirname), '../src/user_icons/', req.session.user.name);
+
+        if(!fs.existsSync(usernameDir)){
+            fs.mkdirSync(usernameDir, {recursive: true});
+        }
+
+        const newFile = path.join(usernameDir, `${Date.now()}.${fileExtension}`);
+
+        await req.files.photo_icon.mv(newFile);
+
+        res.redirect(`/${req.session.user.name}/configuracoes`);
+    }catch(err){
+        console.error(err);
+        res.status(500).send('Erro ao enviar o arquivo');
     }
 });
 
