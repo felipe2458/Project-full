@@ -48,20 +48,39 @@ router.post(`/upload-icon`, async (req, res)=>{
 
         const newFile = path.join(usernameDir, customFileName);
 
-        await req.files.photo_icon.mv(newFile);
-
         const user = await User.findOneAndUpdate({ name: req.session.user.name }, { icon: true }, { new: true });
 
         if(!user){
             return res.status(404).send('Erro ao atualizar o ícone do usuário');
         }
 
-        Icon_user.create({
-            _id: new mongoose.Types.ObjectId(),
-            username: req.session.user.name,
-            fileExtension: fileExtension,
-            imageName: customFileName
-        });
+        Icon_user.findOne({ username: req.session.user.name }).then( async (user)=>{
+            if(user){
+                const filePath = path.join(usernameDir, user.imageName);
+
+                await fs.unlink(filePath ,(err)=>{
+                    if(err){
+                        console.error('Erro ao deletar o ícone:', err);
+                        return
+                    }
+                });
+
+                await req.files.photo_icon.mv(newFile);
+
+                return Icon_user.findOneAndUpdate({ username: req.session.user.name }, { fileExtension, imageName: customFileName }, { new: true});
+            } 
+
+            await req.files.photo_icon.mv(newFile);
+
+            return Icon_user.create({
+                _id: new mongoose.Types.ObjectId(),
+                username: req.session.user.name,
+                fileExtension,
+                imageName: customFileName
+            });
+        }).catch((err)=>{
+            console.error('Erro ao buscar ou atualizar o ícone:', err);
+        })
 
         res.redirect(`/${req.session.user.name}/configuracoes`);
     }catch(err){
