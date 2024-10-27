@@ -61,7 +61,8 @@ app.post('/register', async function(req, res){
             User.create({
                 _id: new mongoose.Types.ObjectId(),
                 name: req.body.name.trim(),
-                password: pass
+                password: pass,
+                icon: false
             }).then(()=>{
                 return res.redirect('/login');
             }).catch(err =>{
@@ -90,11 +91,7 @@ app.post('/login', async (req, res)=>{
         if(bcrypt.compare(req.body.password_login.trim(), user.password)){
             req.session.user = user;
 
-            if(await user.name.includes('_')){
-                return res.redirect(`/${user.name.split('_').join('-')}`);
-            }else{
-                return res.redirect(`${user.name}`);
-            }
+            return res.redirect(`${user.name.split('_').join('-')}/home`);
         }else{
             return res.redirect('/login');
         }

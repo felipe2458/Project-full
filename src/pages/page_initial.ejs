@@ -8,10 +8,31 @@
     <title>Página inicial</title>
 </head>
 <body>
+    <header>
+        <div class="container-icon-user">
+            <div class="icon-user"></div>
+        </div><!-- container-icon-user -->
+    </header>
+
     <h1>Ir para:</h1>
 
-    <a href="/<%= username %>/configuracoes">Configurar usuário</a>
+    <a href="/<%= username.split('_').join('-') %>/configuracoes">Configurar usuário</a>
 </body>
 <script src="../public/JS/JQuery.js"></script>
+<script>
+    var username = '<%= username %>';
+    var icon = `<%= icon %>` === 'true';
+
+    console.log(icon);
+
+    if(icon){
+        var imageName = '<%= imageName %>';
+
+        const Icon_user = $('.icon-user');
+        const localIcon = `../public/user_icons/${username}/${imageName}`;
+
+        Icon_user.css('background-image', `url(${localIcon})`);
+    }
+</script>
 <script src="../public/JS/page_initial.js"></script>
 </html>

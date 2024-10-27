@@ -11,3 +11,24 @@ html,body{
 body{
     background-color: rgb(105, 105, 201);
 }
+
+header{
+    width: 100%;
+    height: 150px;
+}
+
+header .container-icon-user{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+}
+
+header .container-icon-user .icon-user{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-size: cover;
+}

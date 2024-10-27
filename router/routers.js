@@ -1,18 +1,25 @@
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 const router = require('express').Router({mergeParams: true});
+const mongoose = require('mongoose');
+const Icon_user = require('../mongoose/Icon_user');
+const User = require('../mongoose/User');
 
-router.get('/', (req, res)=>{
-    if(req.session.user.name){
-        if(req.session.user.name.includes('_')){
-            if(req.session.user.name.split('_').join('-') === req.params.user){
-                return res.render('page_initial.ejs', {username: req.session.user.name});
+router.get('/home', (req, res)=>{
+    if(req.session.user.name && req.session.user.name.split('_').join('-') === req.params.user){
+        User.findOne({ name: req.session.user.name }).exec((err, user)=>{
+            const icon_check = user.icon;
+
+            if(icon_check){
+                Icon_user.findOne({ username: req.session.user.name }).exec((err, icon)=>{
+                    const imageName = icon.imageName;
+
+                    return res.render('page_initial.ejs', {username: req.session.user.name, imageName, icon: icon_check});
+                });
+            }else{
+                return res.render('page_initial.ejs', {username: req.session.user.name, imageName: '', icon: icon_check});
             }
-        }else{
-            if(req.session.user.name === req.params.user){
-                return res.render('page_initial.ejs', {username: req.session.user.name});
-            }
-        }
+        })
     }else{
         return res.redirect('/login');
     }
@@ -30,15 +37,31 @@ router.post(`/upload-icon`, async (req, res)=>{
 
         const formato = req.files.photo_icon.name.split('.');
         const fileExtension = formato[formato.length - 1];
-        const usernameDir = path.join(path.basename(__dirname), '../src/user_icons/', req.session.user.name);
+
+        const usernameDir = path.join(path.basename(__dirname), '../src/public/user_icons/', req.session.user.name);
+
+        const customFileName = `${req.session.user.name}.${fileExtension}`;
 
         if(!fs.existsSync(usernameDir)){
             fs.mkdirSync(usernameDir, {recursive: true});
         }
 
-        const newFile = path.join(usernameDir, `${Date.now()}.${fileExtension}`);
+        const newFile = path.join(usernameDir, customFileName);
 
         await req.files.photo_icon.mv(newFile);
+
+        const user = await User.findOneAndUpdate({ name: req.session.user.name }, { icon: true }, { new: true });
+
+        if(!user){
+            return res.status(404).send('Erro ao atualizar o ícone do usuário');
+        }
+
+        Icon_user.create({
+            _id: new mongoose.Types.ObjectId(),
+            username: req.session.user.name,
+            fileExtension: fileExtension,
+            imageName: customFileName
+        });
 
         res.redirect(`/${req.session.user.name}/configuracoes`);
     }catch(err){
