@@ -2,22 +2,29 @@ const path = require('path');
 const fs = require('fs');
 const router = require('express').Router({mergeParams: true});
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const Icon_user = require('../mongoose/Icon_user');
 const User = require('../mongoose/User');
 
 router.get('/home', (req, res)=>{
-    if(req.session.user.name && req.session.user.name.split('_').join('-') === req.params.user){
-        User.findOne({ name: req.session.user.name }).exec((err, user)=>{
+    if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+        const userCookie = req.cookies.username;
+
+        if(userCookie){
+            req.session.user = userCookie;
+        }
+
+        User.findOne({ name: req.session.user }).exec((err, user)=>{
             const icon_check = user.icon;
 
             if(icon_check){
-                Icon_user.findOne({ username: req.session.user.name }).exec((err, icon)=>{
+                Icon_user.findOne({ username: req.session.user }).exec((err, icon)=>{
                     const imageName = icon.imageName;
 
-                    return res.render('page_initial.ejs', {username: req.session.user.name, imageName, icon: icon_check});
+                    return res.render('page_initial.ejs', {username: req.session.user, imageName, icon: icon_check});
                 });
             }else{
-                return res.render('page_initial.ejs', {username: req.session.user.name, imageName: '', icon: icon_check});
+                return res.render('page_initial.ejs', {username: req.session.user, imageName: '', icon: icon_check});
             }
         })
     }else{
@@ -38,9 +45,9 @@ router.post(`/upload-icon`, async (req, res)=>{
         const formato = req.files.photo_icon.name.split('.');
         const fileExtension = formato[formato.length - 1];
 
-        const usernameDir = path.join(path.basename(__dirname), '../src/public/user_icons/', req.session.user.name);
+        const usernameDir = path.join(path.basename(__dirname), '../src/public/user_icons/', req.session.user);
 
-        const customFileName = `${req.session.user.name}.${fileExtension}`;
+        const customFileName = `${req.session.user}.${fileExtension}`;
 
         if(!fs.existsSync(usernameDir)){
             fs.mkdirSync(usernameDir, {recursive: true});
@@ -48,13 +55,13 @@ router.post(`/upload-icon`, async (req, res)=>{
 
         const newFile = path.join(usernameDir, customFileName);
 
-        const user = await User.findOneAndUpdate({ name: req.session.user.name }, { icon: true }, { new: true });
+        const user = await User.findOneAndUpdate({ name: req.session.user }, { icon: true }, { new: true });
 
         if(!user){
             return res.status(404).send('Erro ao atualizar o ícone do usuário');
         }
 
-        Icon_user.findOne({ username: req.session.user.name }).then( async (user)=>{
+        Icon_user.findOne({ username: req.session.user }).then( async (user)=>{
             if(user){
                 const filePath = path.join(usernameDir, user.imageName);
 
@@ -67,14 +74,14 @@ router.post(`/upload-icon`, async (req, res)=>{
 
                 await req.files.photo_icon.mv(newFile);
 
-                return Icon_user.findOneAndUpdate({ username: req.session.user.name }, { fileExtension, imageName: customFileName }, { new: true});
+                return Icon_user.findOneAndUpdate({ username: req.session.user }, { fileExtension, imageName: customFileName }, { new: true});
             } 
 
             await req.files.photo_icon.mv(newFile);
 
             return Icon_user.create({
                 _id: new mongoose.Types.ObjectId(),
-                username: req.session.user.name,
+                username: req.session.user,
                 fileExtension,
                 imageName: customFileName
             });
@@ -82,7 +89,7 @@ router.post(`/upload-icon`, async (req, res)=>{
             console.error('Erro ao buscar ou atualizar o ícone:', err);
         })
 
-        res.redirect(`/${req.session.user.name}/configuracoes`);
+        res.redirect(`/${req.session.user}/configuracoes`);
     }catch(err){
         console.error(err);
         res.status(500).send('Erro ao enviar o arquivo');

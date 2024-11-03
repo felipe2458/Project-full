@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../public/CSS/config_user.css">
     <title>Configurações</title>
 </head>
 <body>
-    <form method="post" id="envi_photo_icon" enctype="multipart/form-data">
-        <input type="file" name="photo_icon" id="photo_icon">
-        <input type="submit" name="enviar" value="Enviar">
-    </form>
+    <section class="container">
+        <div class="separar">
+            <div class="container-icon-user">
+                <form id="envi_photo_icon" method="post" enctype="multipart/form-data">
+                    <input type="file" name="photo_icon">
+                    <input type="submit" value="enviar">
+                </form>
+            </div><!-- container-icon-user -->
+        </div><!-- separar -->
 
-    <h2>Voltar para <a href="/<%= username.split('_').join('-') %>/home">Página inicial</a></h2>
+        <div class="separar"></div><!-- separar -->
+    </section><!-- container -->
+
+    <div class="clear"></div><!-- clear -->
 </body>
 <script src="../public/JS/JQuery.js"></script>
 <script>

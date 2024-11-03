@@ -11,6 +11,11 @@
     <h1>Vá para a pagina de:</h1>
     <a href="/register">Registrar</a>
     <a href="/login">Login</a>
+
+    <% if(logado){ %>
+        <a href="/<%= username.split('_').join('-') %>/home">Página inicial do usuário</a>
+    <% } %>
+
 </body>
 <script src="../public/JS/JQuery.js"></script>
 <script src="../public/JS/JQuery.js"></script>

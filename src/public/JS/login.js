@@ -1,6 +1,7 @@
 $(function(){
     const username = $('input[name="name_login"]');
     const password = $('input[name="password_login"]');
+    const cookies = Cookies.noConflict();
 
     let enviUser = false;
     let enviPass = false;
@@ -58,6 +59,14 @@ $(function(){
 
     action.click(function(e){
         if(enviUser && enviPass){
+            /*const remember = $('#remember').is(':checked');
+
+            if(remember){
+                cookies.set('username', username.val().trim(),{
+                    expires: 365
+                });
+            }*/
+
             return true;
         }else{
             if(username.val().trim().length === 0){

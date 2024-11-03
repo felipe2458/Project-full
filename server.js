@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const fileupload = require('express-fileupload');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
 const User = require('./mongoose/User');
 const router = require('./router/routers');
 
@@ -27,7 +28,9 @@ app.use(session({
     secret: '124578963369784512',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 60000 }
+    cookie: {
+        maxAge: null,
+    }
 }));
 
 app.use(fileupload({
@@ -37,6 +40,8 @@ app.use(fileupload({
         fileSize: 1024 * 1024 * 500
     }
 }));
+
+app.use(cookieParser());
 
 app.engine('html',require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -48,7 +53,13 @@ app.get('/register', (req, res)=>{
 });
 
 app.get('/', (req, res)=>{
-    res.render('home.ejs');
+    if(req.cookies.username){
+        req.session.user = req.cookies.username;
+
+        return res.render('home.ejs', { logado: true, username: req.session.user });
+    }else{
+        return res.render('home.ejs', { logado: false });
+    }
 });
 
 app.post('/register', async function(req, res){
@@ -89,9 +100,37 @@ app.post('/login', async (req, res)=>{
         }
 
         if(bcrypt.compare(req.body.password_login.trim(), user.password)){
-            req.session.user = user;
+            const remember = req.body.remember === 'on';
 
-            return res.redirect(`${user.name.split('_').join('-')}/home`);
+            if(await remember){
+                res.cookie('username', req.body.name_login.trim(),{
+                    maxAge: 1000 * 60 * 60 * 24 * 365,
+                    httpOnly: false,
+                    secure: false,
+                    sameSite: 'lax'
+                });
+
+                req.session.user = req.body.name_login.trim();
+
+                return res.redirect(`${req.session.user.split('_').join('-')}/home`);
+
+            }else{
+                const userCookie = await req.cookies.username;
+
+                if(await userCookie){
+                    res.clearCookie('username',{
+                        httpOnly: false,
+                        secure: false,
+                        sameSite: 'lax'
+                    });
+                }
+
+                req.session.user = user.name;
+
+                console.log(req.session.user);
+
+                return res.redirect(`${user.name.split('_').join('-')}/home`);
+            }
         }else{
             return res.redirect('/login');
         }

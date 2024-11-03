@@ -9,14 +9,18 @@
 </head>
 <body>
     <header>
-        <div class="container-icon-user">
-            <div class="icon-user"></div>
-        </div><!-- container-icon-user -->
+        <div class="separar" id="container-configuracoes">
+            <a href="/<%= username.split('_').join('-') %>/configuracoes">
+                <div class="config"></div><!-- config -->
+            </a>
+        </div><!-- Separar -->
+
+        <div class="separar">
+            <div class="container-icon-user">
+                <div class="icon-user"></div>
+            </div><!-- container-icon-user -->
+        </div><!-- Separar -->
     </header>
-
-    <h1>Ir para:</h1>
-
-    <a href="/<%= username.split('_').join('-') %>/configuracoes">Configurar usuário</a>
 </body>
 <script src="../public/JS/JQuery.js"></script>
 <script>
