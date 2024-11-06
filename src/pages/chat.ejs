@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
+    <link rel="stylesheet" href="../public/CSS/chat.css">
+    <title>Chat</title>
+</head>
+<body>
+    <header>
+        <form action="/<%= username.split('_').join('-') %>/buscar-user" method="get">
+            <input type="search" id="search" name="username" placeholder="Buscar usuários">
+            <input type="submit" value="Buscar">
+        </form>
+    </header>
+</body>
+<script src="../public/JS/JQuery.js"></script>
+<script src="/socket.io/socket.io.js"></script> 
+<script src="../public/JS/chat.js"></script>
+</html>

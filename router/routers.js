@@ -1,99 +1,146 @@
+const router = require('express').Router({mergeParams: true});
+const app = require('express')();
 const path = require('path');
 const fs = require('fs');
-const router = require('express').Router({mergeParams: true});
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const Icon_user = require('../mongoose/Icon_user');
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const ioS = socketIo(server);
+
 const User = require('../mongoose/User');
+const Icon_user = require('../mongoose/Icon_user');
 
-router.get('/home', (req, res)=>{
-    if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
-        const userCookie = req.cookies.username;
+module.exports = (io)=>{
+    router.get('/home', (req, res)=>{
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            const userCookie = req.cookies.username;
 
-        if(userCookie){
-            req.session.user = userCookie;
-        }
-
-        User.findOne({ name: req.session.user }).exec((err, user)=>{
-            const icon_check = user.icon;
-
-            if(icon_check){
-                Icon_user.findOne({ username: req.session.user }).exec((err, icon)=>{
-                    const imageName = icon.imageName;
-
-                    return res.render('page_initial.ejs', {username: req.session.user, imageName, icon: icon_check});
-                });
-            }else{
-                return res.render('page_initial.ejs', {username: req.session.user, imageName: '', icon: icon_check});
+            if(userCookie){
+                req.session.user = userCookie;
             }
-        })
-    }else{
-        return res.redirect('/login');
-    }
-});
 
-router.get('/configuracoes', (req, res)=>{
-    res.render('config_user.ejs', {username: req.params.user});
-});
+            User.findOne({ name: req.session.user }).exec((err, user)=>{
+                const icon_check = user.icon;
 
-router.post(`/upload-icon`, async (req, res)=>{
-    try{
-        if(!req.files.photo_icon){
-            return res.status(500).send('Erro ao enviar o arquivo');
+                if(icon_check){
+                    Icon_user.findOne({ username: req.session.user }).exec((err, icon)=>{
+                        const imageName = icon.imageName;
+
+                        return res.render('page_initial.ejs', {username: req.session.user, imageName, icon: icon_check});
+                    });
+                }else{
+                    return res.render('page_initial.ejs', {username: req.session.user, imageName: '', icon: icon_check});
+                }
+            })
+        }else{
+            return res.redirect('/login');
         }
+    });
 
-        const formato = req.files.photo_icon.name.split('.');
-        const fileExtension = formato[formato.length - 1];
+    router.get('/configuracoes', (req, res)=>{
+        res.render('config_user.ejs', {username: req.params.user});
+    });
 
-        const usernameDir = path.join(path.basename(__dirname), '../src/public/user_icons/', req.session.user);
+    router.post(`/upload-icon`, async (req, res)=>{
+        try{
+            if(!req.files.photo_icon){
+                return res.status(500).send('Erro ao enviar o arquivo');
+            }
 
-        const customFileName = `${req.session.user}.${fileExtension}`;
+            const formato = req.files.photo_icon.name.split('.');
+            const fileExtension = formato[formato.length - 1];
 
-        if(!fs.existsSync(usernameDir)){
-            fs.mkdirSync(usernameDir, {recursive: true});
-        }
+            const usernameDir = path.join(path.basename(__dirname), '../src/public/user_icons/', req.session.user);
+            const customFileName = `${req.session.user}.${fileExtension}`;
 
-        const newFile = path.join(usernameDir, customFileName);
+            if(!fs.existsSync(usernameDir)){
+                fs.mkdirSync(usernameDir, {recursive: true});
+            }
 
-        const user = await User.findOneAndUpdate({ name: req.session.user }, { icon: true }, { new: true });
+            const newFile = path.join(usernameDir, customFileName);
 
-        if(!user){
-            return res.status(404).send('Erro ao atualizar o ícone do usuário');
-        }
+            const user = await User.findOneAndUpdate({ name: req.session.user }, { icon: true }, { new: true });
 
-        Icon_user.findOne({ username: req.session.user }).then( async (user)=>{
-            if(user){
-                const filePath = path.join(usernameDir, user.imageName);
+            if(!user){
+                return res.status(404).send('Erro ao atualizar o ícone do usuário');
+            }
 
-                await fs.unlink(filePath ,(err)=>{
-                    if(err){
-                        console.error('Erro ao deletar o ícone:', err);
-                        return
-                    }
-                });
+            Icon_user.findOne({ username: req.session.user }).then( async (user)=>{
+                if(user){
+                    const filePath = path.join(usernameDir, user.imageName);
+
+                    await fs.unlink(filePath ,(err)=>{
+                        if(err){
+                            console.error('Erro ao deletar o ícone:', err);
+                            return
+                        }
+                    });
+
+                    await req.files.photo_icon.mv(newFile);
+
+                    return Icon_user.findOneAndUpdate({ username: req.session.user }, { fileExtension, imageName: customFileName }, { new: true});
+                } 
 
                 await req.files.photo_icon.mv(newFile);
 
-                return Icon_user.findOneAndUpdate({ username: req.session.user }, { fileExtension, imageName: customFileName }, { new: true});
-            } 
+                return Icon_user.create({
+                    _id: new mongoose.Types.ObjectId(),
+                    username: req.session.user,
+                    fileExtension,
+                    imageName: customFileName
+                });
+            }).catch((err)=>{
+                console.error('Erro ao buscar ou atualizar o ícone:', err);
+            })
 
-            await req.files.photo_icon.mv(newFile);
+            res.redirect(`/${req.session.user}/configuracoes`);
+        }catch(err){
+            console.error(err);
+            res.status(500).send('Erro ao enviar o arquivo');
+        }
+    });
 
-            return Icon_user.create({
-                _id: new mongoose.Types.ObjectId(),
-                username: req.session.user,
-                fileExtension,
-                imageName: customFileName
-            });
-        }).catch((err)=>{
-            console.error('Erro ao buscar ou atualizar o ícone:', err);
-        })
+    router.get('/chat', (req, res)=>{
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            return res.render('chat.ejs', { username: req.session.user });
+        }else{
+            return res.redirect('/login');
+        }
+    });
 
-        res.redirect(`/${req.session.user}/configuracoes`);
-    }catch(err){
-        console.error(err);
-        res.status(500).send('Erro ao enviar o arquivo');
-    }
-});
+    router.get('/buscar-user', (req, res)=>{
+        User.find({}).exec().then((users)=>{
+            function buscarUser(){
+                const query = req.query.username.toLowerCase();
+                let usersList = []
 
-module.exports = router;
+                users.forEach((user)=>{
+                    usersList.push(user.name);
+                });
+
+                const usersListFiltered = usersList.filter((name)=>{
+                    return name.toLowerCase().includes(query);
+                });
+
+                const usersListSorted = usersListFiltered.sort((a, b)=>{
+                    const aStartWithQuery = a.toLowerCase().startsWith(query);
+                    const bStartWithQuery = b.toLowerCase().startsWith(query);
+
+                    if(aStartWithQuery === bStartWithQuery){
+                        return a.toLowerCase().localeCompare(b.toLowerCase());
+                    }
+
+                    return aStartWithQuery ? -1 : 1;
+                });
+
+                return usersListSorted;
+            };
+
+            return res.send(buscarUser());
+
+        });
+    });
+
+    return router;
+}

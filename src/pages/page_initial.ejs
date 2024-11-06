@@ -21,13 +21,17 @@
             </div><!-- container-icon-user -->
         </div><!-- Separar -->
     </header>
+
+    <section class="container-applications">
+        <div class="applications">
+            <a href="/<%= username.split('_').join('-') %>/chat">ir para o chat</a>
+        </div><!-- applications -->
+    </section>
 </body>
 <script src="../public/JS/JQuery.js"></script>
 <script>
     var username = '<%= username %>';
     var icon = `<%= icon %>` === 'true';
-
-    console.log(icon);
 
     if(icon){
         var imageName = '<%= imageName %>';
