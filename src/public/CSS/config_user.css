@@ -34,3 +34,7 @@ body{
     height: 30%;
     background-color: green;
 }
+
+#err{
+    display: none;
+}

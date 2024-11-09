@@ -133,8 +133,6 @@ app.post('/login', async (req, res)=>{
 
                 req.session.user = user.name;
 
-                console.log(req.session.user);
-
                 return res.redirect(`${user.name.split('_').join('-')}/home`);
             }
         }else{

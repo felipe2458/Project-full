@@ -20,3 +20,13 @@ header{
     align-items: center;
     background-color: #05a3a3;
 }
+
+.user-procura{
+    background-color: #0bcece;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+#err{
+    display: none;
+}

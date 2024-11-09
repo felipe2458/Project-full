@@ -1,7 +1,16 @@
 $(function(){
     const form = $('#envi_photo_icon');
 
-    const rote = '/' + username.split('_').join('-') + '/upload-icon';
+    form.submit(function(e){
+        const file = $('input[name="photo_icon"]')[0];
+        const errMsg = $('#err');
 
-    form.attr('action', rote)
+        if(file.files.length === 0){
+            errMsg.css('display', 'inline');
+
+            return e.preventDefault();
+        }
+
+        return true;
+    });
 });

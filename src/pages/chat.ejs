@@ -10,12 +10,30 @@
 <body>
     <header>
         <form action="/<%= username.split('_').join('-') %>/buscar-user" method="get">
-            <input type="search" id="search" name="username" placeholder="Buscar usuários">
-            <input type="submit" value="Buscar">
+            <div class="container-procura">
+                <input type="search" id="search" name="username" placeholder="Buscar usuários">
+                <div class="container-users" id="container-users">
+                    <div id="users-wraper"></div><!-- users-wraper -->
+                    <div class="users">
+                    </div><!-- users -->
+                    <div class="err-wraper">
+                        <p id="err">O campo não pode está vazio.</p>
+                    </div><!-- container-err -->
+                </div><!-- container-users -->
+            </div><!-- container-procura -->
         </form>
     </header>
+
+    <section class="container">
+        <div class="container-users-add">
+
+        </div><!-- container-users-add -->
+    </section><!-- container -->
 </body>
 <script src="../public/JS/JQuery.js"></script>
 <script src="/socket.io/socket.io.js"></script> 
+<script>
+    let usersList = <%- JSON.stringify(usersList) %>;
+</script>
 <script src="../public/JS/chat.js"></script>
 </html>

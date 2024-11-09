@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
+    <link rel="stylesheet" href="../public/CSS/busca_users.css">
+    <title>Busca de usuários</title>
 </head>
 <body>
-    <h1>Ola mundo!</h1>
+    <h2>Usuários encontrados:</h2>
+
+    <div class="container-users">
+        <% usersList.forEach((user)=>{ %>
+            <div class="users-wraper">
+                <p><%- user %></p>
+                <div class="add-friend">
+                    <form action="/<%= username.split('_').join('-') %>/buscar-user" method="post">
+                        <input type="submit" id="user_<%= user %>" name="add_friend" value="<%= user %>" style="display: none;">
+                        <label for="user_<%= user %>" title="adicionar <%= user %> à sua lista de amizades">adicionar</label>
+                    </form>
+                </div><!-- add-friend -->
+            </div><!-- users-wraper -->
+        <% }) %>
+    </div><!-- container-users -->
 </body>
+<script src="../public/JS/JQuery.js"></script>
+<script src="../public/JS/busca_users.js"></script>
 </html>

@@ -10,6 +10,7 @@ const ioS = socketIo(server);
 
 const User = require('../mongoose/User');
 const Icon_user = require('../mongoose/Icon_user');
+const Friends = require('../mongoose/Friends');
 
 module.exports = (io)=>{
     router.get('/home', (req, res)=>{
@@ -42,7 +43,7 @@ module.exports = (io)=>{
         res.render('config_user.ejs', {username: req.params.user});
     });
 
-    router.post(`/upload-icon`, async (req, res)=>{
+    router.post('/upload-icon', async (req, res)=>{
         try{
             if(!req.files.photo_icon){
                 return res.status(500).send('Erro ao enviar o arquivo');
@@ -103,43 +104,96 @@ module.exports = (io)=>{
 
     router.get('/chat', (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
-            return res.render('chat.ejs', { username: req.session.user });
+            User.find({}).exec().then((users)=>{
+                let usersList = [];
+
+                users.forEach((user)=>{
+                    usersList.push(user.name);
+                });
+
+                return res.render('chat.ejs', { username: req.session.user, usersList });
+            }).catch((err)=>{
+                console.err("Ouve um erro ao buscar os usuários:", err);
+                return res.status(500).send('Erro ao buscar os usuários, volte para a página inicial <a href="/">Home</a>');
+            });
         }else{
             return res.redirect('/login');
         }
     });
 
     router.get('/buscar-user', (req, res)=>{
-        User.find({}).exec().then((users)=>{
-            function buscarUser(){
-                const query = req.query.username.toLowerCase();
-                let usersList = []
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user && req.query.username ){
+            User.find({}).exec().then((users)=>{
+                function buscarUser(){
+                    const query = req.query.username.toLowerCase();
 
-                users.forEach((user)=>{
-                    usersList.push(user.name);
-                });
+                    let usersList = []
 
-                const usersListFiltered = usersList.filter((name)=>{
-                    return name.toLowerCase().includes(query);
-                });
+                    users.forEach((user)=>{
+                        usersList.push(user.name);
+                    });
 
-                const usersListSorted = usersListFiltered.sort((a, b)=>{
-                    const aStartWithQuery = a.toLowerCase().startsWith(query);
-                    const bStartWithQuery = b.toLowerCase().startsWith(query);
+                    const usersListFiltered = usersList.filter((name)=>{
+                        return name.toLowerCase().includes(query);
+                    });
 
-                    if(aStartWithQuery === bStartWithQuery){
-                        return a.toLowerCase().localeCompare(b.toLowerCase());
+                    const usersListSorted = usersListFiltered.sort((a, b)=>{
+                        const aStartWithQuery = a.toLowerCase().startsWith(query);
+                        const bStartWithQuery = b.toLowerCase().startsWith(query);
+
+                        if(aStartWithQuery === bStartWithQuery){
+                            return a.toLowerCase().localeCompare(b.toLowerCase());
+                        }
+
+                        return aStartWithQuery ? -1 : 1;
+                    });
+
+                    return usersListSorted;
+                };
+
+                return res.render('busca_users.ejs', { usersList: buscarUser(), username: req.session.user });
+
+            }).catch((err)=>{
+                console.error("Ouve um erro ao buscar os usuários:", err);
+                return res.status(500).send('Erro ao buscar os usuários, volte para a página inicial <a href="/">Home</a>');
+            });
+        }else{
+            return res.redirect('/login');
+        }
+    });
+
+    router.post('/add-friend', async (req, res)=>{
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            try{
+                Friends.findOne({ username_logged_in: req.session.user }).then((user)=>{
+                    if(!user){
+                        Friends.create({
+                            _id: new mongoose.Types.ObjectId(),
+                            username_logged_in: req.session.user,
+                            Friends: [req.body.user_friend]
+                        })
+
+                        return
+                    }else{
+                        const friends = user.Friends;
+
+                        if(!friends.includes(req.body.user_friend)){
+                            friends.push(req.body.user_friend);
+                            user.save();
+                        }
+
+                        return res.send('');
                     }
-
-                    return aStartWithQuery ? -1 : 1;
+                }).catch((err)=>{
+                    console.error('Erro ao buscar os amigos:', err);
+                    return res.status(500).send('Erro ao buscar os amigos, tente novamente');
                 });
-
-                return usersListSorted;
-            };
-
-            return res.send(buscarUser());
-
-        });
+            }catch(err){
+                console.error(err);
+            }
+        }else{
+            return res.redirect('/login');
+        }
     });
 
     return router;
