@@ -96,7 +96,7 @@ app.post('/login', async (req, res)=>{
             return res.redirect('/login');
         }
 
-        if(bcrypt.compare(req.body.password_login.trim(), user.password)){
+        if(await bcrypt.compare(req.body.password_login.trim(), user.password)){
             const remember = req.body.remember === 'on';
 
             if(await remember){

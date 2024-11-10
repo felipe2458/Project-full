@@ -14,8 +14,7 @@
                 <input type="search" id="search" name="username" placeholder="Buscar usuários">
                 <div class="container-users" id="container-users">
                     <div id="users-wraper"></div><!-- users-wraper -->
-                    <div class="users">
-                    </div><!-- users -->
+                    <div class="users"></div><!-- users -->
                 </div><!-- container-users -->
             </div><!-- container-procura -->
         </form>
@@ -25,10 +24,32 @@
         <div class="container-friends">
             <h1>Lista de amigos:</h1>
 
+            <% let index = 0; %>
+
             <div class="friends-wraper">
                 <% friends.forEach((friend)=>{ %>
                     <div class="friend">
-                        <div class="friend-icon" title="<%= friend %>">teste</div><!-- friend-icon -->
+                        <%  
+                            const friendsIconsValFiltered = friendsIconsVal.filter(friendIconVal =>{
+                                return friendIconVal.nameFriend.includes(friend);
+                            });
+                        %>
+
+                        <% if(friendsIconsValFiltered[0].icon){
+                            let name = friendsIconsValFiltered[0].nameFriend;
+                            let icon = iconsFriends.filter(icon =>{
+                                return icon.username.includes(name);
+                            });
+                        %>
+
+                            <div class="friend-icon" style="background-image: url('<%= icon[0].data %>');"></div><!-- friend-icon -->
+                        <% }else{ %>
+                            <div class="friend-icon" style="background-image: url(../public/user_icons/iconDefault/icon-padrão.webp);"></div><!-- friend-icon -->
+                        <% } %>
+
+                        <% index++; %>
+
+                        <a href="<%= username.split('_').join('-') %>/<%= friend.split('_').join('-') %>"><div class="friend-name"><%= friend %></div><!-- friend-name --></a>
                     </div><!-- friend -->
                 <% }) %>
             </div><!-- friends-wraper -->
@@ -38,7 +59,7 @@
 <script src="../public/JS/JQuery.js"></script>
 <script src="/socket.io/socket.io.js"></script> 
 <script>
-    let usersList = <%- JSON.stringify(usersList) %>;
+    const usersList = <%- JSON.stringify(usersList) %>;
 </script>
 <script src="../public/JS/chat.js"></script>
 </html>

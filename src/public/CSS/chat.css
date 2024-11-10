@@ -26,3 +26,31 @@ header{
     border: 1px solid black;
     cursor: pointer;
 }
+
+.friends-wraper{
+    display: flex;
+    gap: 50px;
+    margin-top: 40px;
+    justify-content: center;
+}
+
+.friends-wraper .friend{
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    gap: 10px;
+}
+
+.friend-icon{
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
