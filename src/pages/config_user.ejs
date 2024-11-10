@@ -14,11 +14,11 @@
     <section class="container">
         <div class="separar">
             <div class="container-icon-user">
-                <form id="envi_photo_icon" action="/<%= username %>/upload-icon" method="post" enctype="multipart/form-data">
+                <form id="envi_photo_icon" action="/<%= username %>/upload-icon" accept="image/*" method="post" enctype="multipart/form-data">
                     <div class="container-err">
-                        <input type="file" name="photo_icon">
-                        <input type="submit" value="enviar">
-                        <p id="err">O arquivo não pode estar vazio.</p>
+                        <input type="file" name="photo_icon" accept="image/*">
+                        <input type="submit" value="Enviar">
+                        <p id="err" style="display:none;">O arquivo não pode estar vazio.</p>
                     </div><!-- container-err -->
                 </form>
             </div><!-- container-icon-user -->
@@ -28,7 +28,8 @@
     </section><!-- container -->
 
     <div class="clear"></div><!-- clear -->
+
+    <script src="../public/JS/JQuery.js"></script>
+    <script src="../public/JS/config_user.js"></script>
 </body>
-<script src="../public/JS/JQuery.js"></script>
-<script src="../public/JS/config_user.js"></script>
 </html>

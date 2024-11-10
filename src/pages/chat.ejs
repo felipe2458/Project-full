@@ -16,18 +16,23 @@
                     <div id="users-wraper"></div><!-- users-wraper -->
                     <div class="users">
                     </div><!-- users -->
-                    <div class="err-wraper">
-                        <p id="err">O campo não pode está vazio.</p>
-                    </div><!-- container-err -->
                 </div><!-- container-users -->
             </div><!-- container-procura -->
         </form>
     </header>
 
     <section class="container">
-        <div class="container-users-add">
+        <div class="container-friends">
+            <h1>Lista de amigos:</h1>
 
-        </div><!-- container-users-add -->
+            <div class="friends-wraper">
+                <% friends.forEach((friend)=>{ %>
+                    <div class="friend">
+                        <div class="friend-icon" title="<%= friend %>">teste</div><!-- friend-icon -->
+                    </div><!-- friend -->
+                <% }) %>
+            </div><!-- friends-wraper -->
+        </div><!-- container-friends -->
     </section><!-- container -->
 </body>
 <script src="../public/JS/JQuery.js"></script>

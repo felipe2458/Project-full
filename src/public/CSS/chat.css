@@ -26,7 +26,3 @@ header{
     border: 1px solid black;
     cursor: pointer;
 }
-
-#err{
-    display: none;
-}

@@ -6,7 +6,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const fileupload = require('express-fileupload');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 
@@ -36,14 +35,6 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         maxAge: null,
-    }
-}));
-
-app.use(fileupload({
-    useTempFiles: true,
-    tempFileDir: '/tmp',
-    limits: {
-        fileSize: 1024 * 1024 * 500
     }
 }));
 
