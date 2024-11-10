@@ -111,9 +111,11 @@ module.exports = (io)=>{
                     usersList.push(user.name);
                 });
 
+                usersList.splice(usersList.indexOf(req.session.user), 1);
+
                 return res.render('chat.ejs', { username: req.session.user, usersList });
             }).catch((err)=>{
-                console.err("Ouve um erro ao buscar os usuários:", err);
+                console.error("Ouve um erro ao buscar os usuários:", err);
                 return res.status(500).send('Erro ao buscar os usuários, volte para a página inicial <a href="/">Home</a>');
             });
         }else{
@@ -123,7 +125,7 @@ module.exports = (io)=>{
 
     router.get('/buscar-user', (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user && req.query.username ){
-            User.find({}).exec().then((users)=>{
+            User.find({}).exec().then( async (users)=>{
                 function buscarUser(){
                     const query = req.query.username.toLowerCase();
 
@@ -132,6 +134,8 @@ module.exports = (io)=>{
                     users.forEach((user)=>{
                         usersList.push(user.name);
                     });
+
+                    usersList.splice(usersList.indexOf(req.session.user), 1);
 
                     const usersListFiltered = usersList.filter((name)=>{
                         return name.toLowerCase().includes(query);
@@ -151,7 +155,16 @@ module.exports = (io)=>{
                     return usersListSorted;
                 };
 
-                return res.render('busca_users.ejs', { usersList: buscarUser(), username: req.session.user });
+                Friends.findOne({ username_logged_in: req.session.user }).then((result)=>{
+                    if(!result){
+                        return res.render('busca_users.ejs', { username: req.session.user, usersList: buscarUser(), friends: [] });
+                    }
+
+                    return res.render('busca_users.ejs', { username: req.session.user, usersList: buscarUser(), friends: result.Friends });
+                }).catch((err)=>{
+                    console.error('Erro ao buscar os amigos:', err);
+                    return res.status(500).send('Erro ao buscar os amigos, tente novamente');
+                });
 
             }).catch((err)=>{
                 console.error("Ouve um erro ao buscar os usuários:", err);
@@ -180,6 +193,13 @@ module.exports = (io)=>{
                         if(!friends.includes(req.body.user_friend)){
                             friends.push(req.body.user_friend);
                             user.save();
+                        }else{
+                            let index = friends.indexOf(req.body.user_friend);
+
+                            if(index !== -1){
+                                friends.splice(index, 1)
+                                user.save();
+                            }
                         }
 
                         return res.send('');

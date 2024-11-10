@@ -2,10 +2,10 @@ $(function(){
     const form = $('form');
     const users = $('input[name="add_friend"]');
 
-    users.click(function(){
-        const user = $(this).val();
+    users.click(async function(){
+        const user = await $(this).val();
 
-        $.ajax({
+        await $.ajax({
             url: 'add-friend',
             method: 'POST',
             data: { user_friend: user },
@@ -13,6 +13,8 @@ $(function(){
             console.error(errorThrown);
             alert('Ouve um erro ao adicionar o usuário a sua lista de amigos! tente novamente.');
         });
+
+        location.reload();
     });
 
     form.submit(function(e){
