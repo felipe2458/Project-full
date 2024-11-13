@@ -3,9 +3,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     _id: { type: String, required: true },
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    icon: { type: Boolean, required: true }
+    icon: { type: Boolean, required: true },
+    socketId: { type: String, required: false, unique: true}
 }, {collection: 'Users'});
 
 const User = mongoose.model('User', userSchema);

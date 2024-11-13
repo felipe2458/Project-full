@@ -1,0 +1,85 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,body{
+    height: 100%;
+}
+
+body{
+    background-color: rgb(13, 97, 97);
+}
+
+header{
+    width: 100%;
+    height: 100px;
+}
+
+.container-icon-friend{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container-icon-friend .icon-wraper .icon-friend{
+    width: 70px;
+    height: 70px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+}
+
+section.container{
+    width: 100%;
+    height: calc(100% - 100px);
+}
+
+.container .container-message{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+}
+
+.container .input-wraper{
+    width: 100%;
+    height: 20%;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container .input-wraper input[type=text]{
+    width: 50%;
+    outline: none;
+}
+
+.container-message .message-wraper{
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+}
+
+.message-wraper .message{
+    width: 100%;
+    color: whitesmoke;
+}
+
+.own-message {
+    background-color: #62a6f0;
+    align-self: flex-end;
+}
+
+.other-message {
+    background-color: #c5aa12;
+    align-self: flex-start;
+}

@@ -1,7 +1,5 @@
 const router = require('express').Router({mergeParams: true});
 const app = require('express')();
-const path = require('path');
-const fs = require('fs');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const http = require('http');
@@ -18,6 +16,7 @@ const upload = multer({
 const User = require('../mongoose/User');
 const Icon_user = require('../mongoose/Icon_user');
 const Friends = require('../mongoose/Friends');
+const Chat = require('../mongoose/Chat');
 
 module.exports = (io)=>{
     router.get('/home', (req, res)=>{
@@ -170,6 +169,31 @@ module.exports = (io)=>{
                 console.error("Ouve um erro ao buscar os usuários:", err);
                 return res.status(500).send('Erro ao buscar os usuários, volte para a página inicial <a href="/">Home</a>');
             });
+        }else{
+            return res.redirect('/login');
+        }
+    });
+
+    router.get('/chat/:friend', (req, res)=>{
+        const friend = req.params.friend.split('-').join('_');
+
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            Icon_user.findOne({ username: friend }).then((result_icon)=>{
+                Chat.findOne({ users: { $in: [req.session.user, friend] } }).then((result_chat)=>{
+                    const image = result_icon ? result_icon.data.toString('base64') : null;
+                    const imageSrc = image ? `data:${result_icon.contentType};base64,${image}` : null;
+                    const chat = result_chat ? result_chat.messages : [];
+
+                    return res.render('chat_with_user.ejs', { username: req.session.user, friend, image: imageSrc, chat });
+                }).catch((err)=>{
+                    console.error('Erro ao buscar chat:', err);
+                    return res.status(500).send('Erro ao buscar chat, tente novamente');
+                });
+            }).catch((err)=>{
+                console.error('Erro ao buscar ícone:', err);
+                return res.status(500).send('Erro ao buscar ícone, tente novamente');
+            });
+
         }else{
             return res.redirect('/login');
         }

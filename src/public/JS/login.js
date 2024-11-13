@@ -1,7 +1,7 @@
 $(function(){
     const username = $('input[name="name_login"]');
     const password = $('input[name="password_login"]');
-    const cookies = Cookies.noConflict();
+    const socket = io();
 
     let enviUser = false;
     let enviPass = false;
@@ -59,13 +59,13 @@ $(function(){
 
     action.click(function(e){
         if(enviUser && enviPass){
-            /*const remember = $('#remember').is(':checked');
+            const socketId = socket.id;
 
-            if(remember){
-                cookies.set('username', username.val().trim(),{
-                    expires: 365
-                });
-            }*/
+            socket.emit('login', {
+                name: username.val().trim(),
+                password: password.val().trim(),
+                socketId: socketId,
+            });
 
             return true;
         }else{

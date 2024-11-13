@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/public/images/icons/icon_principal.ico">
+    <link rel="stylesheet" href="/public/CSS/chat_with_user.css">
+    <title>Conversa com <%= friend %></title>
+</head>
+<body>
+    <header>
+        <div class="container-icon-friend">
+            <div class="icon-wraper">
+                <% if(image){ %>
+                    <div class="icon-friend" style="background-image: url('<%= image %>');"></div><!-- icon-friend -->
+                <% }else{ %>
+                    <div class="icon-friend" style="background-image: url(/public/user_icons/iconDefault/icon-padrão.webp);"></div><!-- icon-friend -->
+                <% } %>
+            </div><!-- icon-wraper -->
+            <h2><%= friend %></h2>
+        </div><!-- container-icon-friend -->
+    </header>
+
+    <section class="container">
+        <div class="container-message">
+            <div class="message-wraper">
+                <% if(chat){
+                    chat.forEach(info =>{
+                        if(info.messageFrom === username){ %>
+                            <div class="message own-message"><p><%= info.message %></p></div>
+                        <% }else{ %>
+                            <div class="message other-message"><p><%= info.message %></p></div>
+                        <% }
+                    });
+                } %>
+            </div><!-- message-wraper -->
+        </div><!-- box-mensage -->
+
+        <div class="input-wraper">
+            <input type="text" name="message" id="message">
+            <input type="submit" name="action" id="button" value="Enviar">
+        </div><!-- input-wraper -->
+    </section>
+</body>
+<script src="/public/JS/JQuery.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    $(function(){
+        const socket = io();
+        const username = '<%= username %>'
+        const friend = '<%= friend %>'
+
+        $('#button').click((e)=>{
+            const message = $('#message').val();
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const day = now.toISOString().split('T')[0];
+
+            const time = hours + ':' + minutes;
+
+            if(message.trim() !== ''){
+                socket.emit('send_message', { username, friend, message, time, day });
+                $('#message').val('');
+
+                return true;
+            }
+
+            e.preventDefault();
+        });
+
+        socket.on('receive_message', (data)=>{
+            const isOwnMessage = data.username === username;
+            const messageClass = isOwnMessage ? 'own-message' : 'other-message';
+
+            if(data.username === username && data.friend === friend || data.username === friend && data.friend === username){
+                $('.message-wraper').append(`
+                    <div class="message ${messageClass}"><p>${data.message}</p></div>
+                `);
+            }
+        });
+    });
+</script>
+<script src="/public/JS/chat_with_user.js"></script>
+</html>
