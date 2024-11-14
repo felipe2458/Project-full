@@ -72,10 +72,10 @@ app.post('/register', async function(req, res){
                 name: req.body.name.trim(),
                 password: pass,
                 icon: false,
-                socketId: null,
             }).then(()=>{
                 return res.redirect('/login');
             }).catch(err =>{
+                console.error('Erro ao cadastrar usuário:', err);
                 return res.redirect('/register');
             });
         }
@@ -140,26 +140,6 @@ app.post('/login', async (req, res)=>{
 app.use('/:user', router);
 
 io.on('connection', (socket) => {
-    socket.on('login', async (data)=>{
-        const { name, password, socketId } = data;
-
-        try{
-            const user = await User.findOne({ name });
-
-            if(user && await bcrypt.compare(password, user.password)){
-                if(!user.socketId){
-                    user.socketId = socketId;
-                    await user.save();
-                }
-            }else{
-                socket.emit('login-erro', { message: 'Usuário ou senha inválidos.' });
-            }
-        }catch(err){
-            console.error('Erro ao validar login:', err);
-            socket.emit('login-erro', { message: 'Erro ao validar login. Tente novamente.' });
-        }
-    });
-
     socket.on('send_message', (data)=>{
         io.emit('receive_message', data);
 

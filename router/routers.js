@@ -211,7 +211,7 @@ module.exports = (io)=>{
     });
 
     router.get('/buscar-user', (req, res)=>{
-        if(req.session.user && req.session.user.split('_').join('-') === req.params.user && req.query.username ){
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user && req.query.username){
             User.find({}).exec().then( async (users)=>{
                 function buscarUser(){
                     const query = req.query.username.toLowerCase();
@@ -225,7 +225,7 @@ module.exports = (io)=>{
                     usersList.splice(usersList.indexOf(req.session.user), 1);
 
                     const usersListFiltered = usersList.filter((name)=>{
-                        return name.toLowerCase().includes(query);
+                        return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(query);
                     });
 
                     const usersListSorted = usersListFiltered.sort((a, b)=>{

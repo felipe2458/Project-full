@@ -6,7 +6,6 @@ const userSchema = new Schema({
     name: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     icon: { type: Boolean, required: true },
-    socketId: { type: String, required: false, unique: true}
 }, {collection: 'Users'});
 
 const User = mongoose.model('User', userSchema);

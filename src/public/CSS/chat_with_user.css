@@ -72,14 +72,14 @@ section.container{
 .message-wraper .message{
     width: 100%;
     color: whitesmoke;
+    padding: 0 20px;
 }
 
 .own-message {
     background-color: #62a6f0;
-    align-self: flex-end;
+    text-align: right;
 }
 
 .other-message {
     background-color: #c5aa12;
-    align-self: flex-start;
 }
