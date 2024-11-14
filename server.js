@@ -165,17 +165,8 @@ io.on('connection', (socket) => {
 
         const { username, friend, message, time, day } = data;
 
-        Chat.findOne({ users: { $in: [username, friend] } }).then((result)=>{
-            if(!result){
-                const newChat = new Chat({
-                    _id: new mongoose.Types.ObjectId(),
-                    users: [username, friend],
-                    messages: [{ messageFrom: username, message, time, day }]
-                });
-
-                newChat.save();
-                return
-            }else{
+        Chat.findOne({ users: { $all: [username, friend] } }).then((result)=>{
+            if(result){
                 result.messages.push({ messageFrom: username, message, time, day });
                 result.save();
             }

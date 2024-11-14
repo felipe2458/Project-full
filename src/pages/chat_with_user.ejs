@@ -25,7 +25,11 @@
     <section class="container">
         <div class="container-message">
             <div class="message-wraper">
-                <% if(chat){
+                <%
+                    const user_and_friend = [username, friend];
+                %>
+
+                <% if(chat && user_and_friend.sort().toString() === usersChat.sort().toString()){
                     chat.forEach(info =>{
                         if(info.messageFrom === username){ %>
                             <div class="message own-message"><p><%= info.message %></p></div>
@@ -48,8 +52,9 @@
 <script>
     $(function(){
         const socket = io();
-        const username = '<%= username %>'
-        const friend = '<%= friend %>'
+        const username = '<%= username %>';
+        const friend = '<%= friend %>';
+        const users_chat = <%- JSON.stringify(usersChat) %>;
 
         $('#button').click((e)=>{
             const message = $('#message').val();
@@ -74,7 +79,13 @@
             const isOwnMessage = data.username === username;
             const messageClass = isOwnMessage ? 'own-message' : 'other-message';
 
-            if(data.username === username && data.friend === friend || data.username === friend && data.friend === username){
+            const users_chat_name = [data.username, data.friend];
+
+            if(users_chat.sort().toString() != users_chat_name.sort().toString()){
+                window.location.reload();
+            }
+
+            if(users_chat.sort().toString() === users_chat_name.sort().toString()){
                 $('.message-wraper').append(`
                     <div class="message ${messageClass}"><p>${data.message}</p></div>
                 `);

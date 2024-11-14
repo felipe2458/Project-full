@@ -179,12 +179,23 @@ module.exports = (io)=>{
 
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
             Icon_user.findOne({ username: friend }).then((result_icon)=>{
-                Chat.findOne({ users: { $in: [req.session.user, friend] } }).then((result_chat)=>{
+                Chat.findOne({ users: { $all: [req.session.user, friend] } }).then((result_chat)=>{
+                    if(!result_chat){
+                        const newChat = new Chat({
+                            _id: new mongoose.Types.ObjectId(),
+                            users: [req.session.user, friend],
+                            messages: []
+                        });
+
+                        newChat.save();
+                    }
+
                     const image = result_icon ? result_icon.data.toString('base64') : null;
                     const imageSrc = image ? `data:${result_icon.contentType};base64,${image}` : null;
                     const chat = result_chat ? result_chat.messages : [];
+                    const usersChat = result_chat ? result_chat.users : [];
 
-                    return res.render('chat_with_user.ejs', { username: req.session.user, friend, image: imageSrc, chat });
+                    return res.render('chat_with_user.ejs', { username: req.session.user, friend, image: imageSrc, chat, usersChat });
                 }).catch((err)=>{
                     console.error('Erro ao buscar chat:', err);
                     return res.status(500).send('Erro ao buscar chat, tente novamente');
