@@ -4,10 +4,17 @@ $(function(){
     const users_wraper = $('#users-wraper');
     const container_users = $('.container-users');
 
-    search.on('input', ()=>{
-        const users_filtered = usersList.filter((user)=>{
-            return user.toLowerCase().includes(search.val().toLowerCase());
+    function getUsers(names, inputVal){
+        const input_val = inputVal.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+        return names.filter(name => {
+            const name_user = name.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            return name_user.includes(input_val);
         });
+    }
+
+    search.on('input', ()=>{
+        const users_filtered = getUsers(usersList, search.val());
 
         users_wraper.empty();
 
