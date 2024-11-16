@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
-    <link rel="stylesheet" href="../public/CSS/chat.css">
+    <link rel="icon" type="image/x-icon" href="/public/images/icons/icon_principal.ico">
+    <link rel="stylesheet" href="/public/CSS/chat.css">
     <title>Chat</title>
 </head>
 <body>
@@ -14,7 +14,6 @@
                 <input type="search" id="search" name="username" placeholder="Buscar usuários">
                 <div class="container-users" id="container-users">
                     <div id="users-wraper"></div><!-- users-wraper -->
-                    <div class="users"></div><!-- users -->
                 </div><!-- container-users -->
             </div><!-- container-procura -->
         </form>
@@ -49,15 +48,14 @@
 
                         <% index++; %>
 
-                        <a href="<%= username.split('_').join('-') %>/<%= friend.split('_').join('-') %>"><div class="friend-name"><%= friend %></div><!-- friend-name --></a>
+                        <a href="chat/<%= friend.split('_').join('-') %>"><div class="friend-name"><%= friend %></div><!-- friend-name --></a>
                     </div><!-- friend -->
                 <% }) %>
             </div><!-- friends-wraper -->
         </div><!-- container-friends -->
     </section><!-- container -->
 </body>
-<script src="../public/JS/JQuery.js"></script>
-<script src="/socket.io/socket.io.js"></script> 
+<script src="/public/JS/JQuery.js"></script>
 <script>
     const usersList = <%- JSON.stringify(usersList) %>;
 </script>

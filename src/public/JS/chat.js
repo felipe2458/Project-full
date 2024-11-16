@@ -2,6 +2,7 @@ $(function(){
     const form = $('form');
     const search = $('#search');
     const users_wraper = $('#users-wraper');
+    const container_users = $('.container-users');
 
     search.on('input', ()=>{
         const users_filtered = usersList.filter((user)=>{
@@ -12,17 +13,14 @@ $(function(){
 
         if(search.val().trim() !== ''){
             users_filtered.forEach((user)=>{
-                users_wraper.append(`<p class="user-procura" id="${user}">${user}</p>`);
+                users_wraper.append(`<div class="user-procura" id="${user}"><a href="buscar-user?username=${user}">${user}</a></div>`);
             });
 
-            const user_procura = $('.user-procura');
-
-            user_procura.click(function(){
-                const user = $(this).attr('id');
-
-                search.val(user);
-            });
+            container_users.addClass('active');
+            return;
         }
+
+        container_users.removeClass('active');
     });
 
     form.submit(function(e){

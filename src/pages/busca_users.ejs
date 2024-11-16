@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
-    <link rel="stylesheet" href="../public/CSS/busca_users.css">
+    <link rel="icon" type="image/x-icon" href="/public/images/icons/icon_principal.ico">
+    <link rel="stylesheet" href="/public/CSS/busca_users.css">
     <title>Busca de usuários</title>
 </head>
 <body>
@@ -15,14 +15,12 @@
             <div class="users-wraper">
                 <p><%- user %></p>
                 <div class="add-friend">
-                    <form action="/<%= username.split('_').join('-') %>/buscar-user" method="post">
-                        <input type="submit" id="user_<%= user %>" name="add_friend" value="<%= user %>" style="display: none;">
-                        <% if(!friends.includes(user)){ %>
-                            <label for="user_<%= user %>" title="adicionar <%= user %> à sua lista de amizades">adicionar</label>
-                        <% }else{ %>
-                            <label for="user_<%= user %>" title="remover <%= user %> da sua lista de amizades">remover</label>
-                        <% } %>
-                    </form>
+                    <input type="submit" id="user_<%= user %>" name="add_friend" value="<%= user %>" style="display: none;">
+                    <% if(!friends.includes(user)){ %>
+                        <label for="user_<%= user %>" title="adicionar <%= user %> à sua lista de amizades">adicionar</label>
+                    <% }else{ %>
+                        <label for="user_<%= user %>" title="remover <%= user %> da sua lista de amizades">remover</label>
+                    <% } %>
                 </div><!-- add-friend -->
             </div><!-- users-wraper -->
         <% }) %>

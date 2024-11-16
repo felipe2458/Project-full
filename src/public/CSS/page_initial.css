@@ -4,58 +4,194 @@
     box-sizing: border-box;
 }
 
-html,body{
-    height: 100%;
-}
-
 body{
-    background-color: rgb(105, 105, 201);
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 header{
     width: 100%;
-    height: 150px;
+    background-color: #1f1f1f;
+    padding: 15px 30px;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid #333;
 }
 
 header .separar{
-    width: 50%;
-    height: 100%;
-}
-
-header .separar .container-icon-user{
-    width: 100%;
-    height: 100%;
     display: flex;
-    justify-content: right;
-    padding: 10px 30px 0 0;
+    align-items: center;
 }
 
-header .separar .container-icon-user .icon-user{
-    width: 50px;
-    height: 50px;
+#container-configuracoes{
+    margin-left: 20px;
+}
+
+.config{
+    width: 35px;
+    height: 35px;
+    background-image: url('../images/icons/settings-glyph-black-icon-png_293809-removebg-preview\ \(1\).png');
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.config:hover{
+    transform: scale(1.1);
+}
+
+.container-icon-user{
+    position: relative;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background-size: cover;
+    overflow: hidden;
 }
 
-header .separar#container-configuracoes{
-    padding: 20px;
-}
-
-header .separar#container-configuracoes a{
-    width: 30px;
-    height: 30px;
-    display: flex;
-}
-
-header .separar .config{
+.icon-user{
     width: 100%;
     height: 100%;
-    background-image: url(../images/icons/settings-glyph-black-icon-png_293809-removebg-preview\ \(1\).png);
     background-size: cover;
-    transition: all 0.5s;
+    background-position: center;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    border: 2px solid #555;
 }
 
-header .separar .config:hover{
-    transform: scale(1.2);
+.container-applications{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 20px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.applications{
+    text-align: center;
+}
+
+.applications a{
+    text-decoration: none;
+    color: white;
+    background-color: #27ae60;
+    padding: 14px 28px;
+    font-size: 18px;
+    border-radius: 30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.applications a:hover{
+    background-color: #2ecc71;
+    transform: translateY(-3px);
+}
+
+.applications a:active{
+    background-color: #1e7e4d;
+    transform: translateY(0);
+}
+
+.container-users{
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    background-color: #222;
+    display: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 99;
+}
+
+.container-users::-webkit-scrollbar{
+    width: 8px;
+    height: 8px;
+    background-color: #333;
+}
+
+.container-users::-webkit-scrollbar-thumb{
+    background-color: #27ae60;
+    border-radius: 10px;
+}
+
+.container-users.active{
+    display: block;
+}
+
+#users-wraper{
+    padding: 20px 30px;
+    overflow: hidden;
+}
+
+#users-wraper .user-procura{
+    display: flex;
+    align-items: center;
+    padding: 14px 10px;
+    background-color: #333;
+    border-radius: 10px;
+    color: #fff;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#users-wraper .user-procura:hover{
+    background-color: #444;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+@media (max-width: 768px){
+    header{
+        padding: 12px 20px;
+    }
+
+    .container-applications{
+        margin-top: 20px;
+    }
+
+    .applications a{
+        font-size: 16px;
+        padding: 12px 24px;
+    }
+}
+
+@media (max-width: 480px){
+    header{
+        padding: 10px 15px;
+    }
+
+    .container-icon-user{
+        width: 50px;
+        height: 50px;
+    }
+
+    .icon-user{
+        width: 100%;
+        height: 100%;
+    }
+
+    .applications a{
+        font-size: 14px;
+        padding: 10px 20px;
+    }
 }

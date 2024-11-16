@@ -2,28 +2,104 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
-}
-
-html,body{
-    height: 100%;
 }
 
 body{
-    background-color: rgb(0, 29, 17);
-    color: whitesmoke;
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+h2{
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: #fff;
 }
 
 .container-users{
     width: 100%;
-    height: 300px;
-    padding: 20px;
-    display: flex;
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    padding: 0 20px;
 }
 
-.container-users .users-wraper label{
-    display: block;
-    margin-top: 10px;
+.users-wraper{
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.users-wraper:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.users-wraper p{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #dcdde1;
+    margin-right: 15px;
+}
+
+.add-friend{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-friend label{
+    font-size: 1rem;
+    font-weight: 500;
+    color: #27ae60;
+    background-color: #1e1e1e;
+    border: 2px solid #27ae60;
+    padding: 8px 15px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.add-friend label:hover{
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.add-friend label[title="remover"]{
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: #fff;
+}
+
+.add-friend label[title="remover"]:hover{
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+@media (max-width: 768px){
+    .container-users{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px){
+    .container-users{
+        grid-template-columns: 1fr;
+    }
+
+    h2{
+        font-size: 1.4rem;
+    }
 }

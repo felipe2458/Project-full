@@ -13,6 +13,7 @@ const socketIo = require('socket.io');
 const io = socketIo(server);
 
 const User = require('./mongoose/User');
+const Chat = require('./mongoose/Chat');
 const router = require('./router/routers')(io);
 
 mongoose.connect('mongodb+srv://root:q8n7MKjqbgluikbZ@cluster0.zsdig.mongodb.net/Project-full?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
@@ -40,10 +41,10 @@ app.use(session({
 
 app.use(cookieParser());
 
-app.engine('html',require('ejs').renderFile);
+app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use('/public', express.static(path.join(__dirname, 'src/public')));
-app.set('views', path.join(__dirname, '/src/pages'));
+app.set('views', path.join(__dirname, 'src/pages'));
 
 app.get('/', (req, res)=>{
     if(req.cookies.username){
@@ -70,10 +71,11 @@ app.post('/register', async function(req, res){
                 _id: new mongoose.Types.ObjectId(),
                 name: req.body.name.trim(),
                 password: pass,
-                icon: false
+                icon: false,
             }).then(()=>{
                 return res.redirect('/login');
             }).catch(err =>{
+                console.error('Erro ao cadastrar usuário:', err);
                 return res.redirect('/register');
             });
         }
@@ -124,7 +126,7 @@ app.post('/login', async (req, res)=>{
 
                 req.session.user = user.name;
 
-                return res.redirect(`${user.name.split('_').join('-')}/home`);
+                return res.redirect(`/${user.name.split('_').join('-')}/home`);
             }
         }else{
             return res.redirect('/login');
@@ -135,13 +137,28 @@ app.post('/login', async (req, res)=>{
     }
 });
 
-io.on('connection', (socket)=>{
-    socket.on('sendMessage', (data)=>{
-        io.emit('newMessage', { message: data.message });
-    });
+app.use('/:user', router);
+
+io.on('connection', (socket) => {
+    socket.on('send_message', (data)=>{
+        io.emit('receive_message', data);
+
+        const { username, friend, message, time, day } = data;
+
+        Chat.findOne({ users: { $all: [username, friend] } }).then((result)=>{
+            if(result){
+                result.messages.push({ messageFrom: username, message, time, day });
+                result.save();
+            }
+        }).catch((err)=>{
+            console.error('Erro ao buscar chat:', err);
+        });
+    })
 });
 
-app.use('/:user', router);
+app.use(function(req, res, next){
+    res.status(404).send('Esta página não existe!');
+});
 
 server.listen(3090, ()=>{
     console.log('O servidor está rodando na porta 3090!');

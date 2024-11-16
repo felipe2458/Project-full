@@ -1,7 +1,5 @@
 const router = require('express').Router({mergeParams: true});
 const app = require('express')();
-const path = require('path');
-const fs = require('fs');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const http = require('http');
@@ -18,6 +16,7 @@ const upload = multer({
 const User = require('../mongoose/User');
 const Icon_user = require('../mongoose/Icon_user');
 const Friends = require('../mongoose/Friends');
+const Chat = require('../mongoose/Chat');
 
 module.exports = (io)=>{
     router.get('/home', (req, res)=>{
@@ -175,8 +174,44 @@ module.exports = (io)=>{
         }
     });
 
+    router.get('/chat/:friend', (req, res)=>{
+        const friend = req.params.friend.split('-').join('_');
+
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            Icon_user.findOne({ username: friend }).then((result_icon)=>{
+                Chat.findOne({ users: { $all: [req.session.user, friend] } }).then((result_chat)=>{
+                    if(!result_chat){
+                        const newChat = new Chat({
+                            _id: new mongoose.Types.ObjectId(),
+                            users: [req.session.user, friend],
+                            messages: []
+                        });
+
+                        newChat.save();
+                    }
+
+                    const image = result_icon ? result_icon.data.toString('base64') : null;
+                    const imageSrc = image ? `data:${result_icon.contentType};base64,${image}` : null;
+                    const chat = result_chat ? result_chat.messages : [];
+                    const usersChat = result_chat ? result_chat.users : [];
+
+                    return res.render('chat_with_user.ejs', { username: req.session.user, friend, image: imageSrc, chat, usersChat });
+                }).catch((err)=>{
+                    console.error('Erro ao buscar chat:', err);
+                    return res.status(500).send('Erro ao buscar chat, tente novamente');
+                });
+            }).catch((err)=>{
+                console.error('Erro ao buscar ícone:', err);
+                return res.status(500).send('Erro ao buscar ícone, tente novamente');
+            });
+
+        }else{
+            return res.redirect('/login');
+        }
+    });
+
     router.get('/buscar-user', (req, res)=>{
-        if(req.session.user && req.session.user.split('_').join('-') === req.params.user && req.query.username ){
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user && req.query.username){
             User.find({}).exec().then( async (users)=>{
                 function buscarUser(){
                     const query = req.query.username.toLowerCase();
@@ -190,7 +225,7 @@ module.exports = (io)=>{
                     usersList.splice(usersList.indexOf(req.session.user), 1);
 
                     const usersListFiltered = usersList.filter((name)=>{
-                        return name.toLowerCase().includes(query);
+                        return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(query);
                     });
 
                     const usersListSorted = usersListFiltered.sort((a, b)=>{
