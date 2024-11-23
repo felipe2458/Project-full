@@ -157,7 +157,7 @@ io.on('connection', (socket) => {
 });
 
 app.use(function(req, res, next){
-    res.status(404).send('Esta página não existe!');
+    res.render('page404.ejs');
 });
 
 server.listen(3090, ()=>{
