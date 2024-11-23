@@ -14,17 +14,44 @@
     <section class="container">
         <div class="separar">
             <div class="container-icon-user">
-                <form id="envi_photo_icon" action="/<%= username %>/upload-icon" accept="image/*" method="post" enctype="multipart/form-data">
+                <form id="envi_photo_icon" accept="image/*" enctype="multipart/form-data">
                     <div class="container-err">
-                        <input type="file" name="photo_icon" accept="image/*">
-                        <input type="submit" value="Enviar">
-                        <p id="err" style="display:none;">O arquivo não pode estar vazio.</p>
+                        <div class="user-icon" style="background-image: url('<%= image ? image : '/public/user_icons/iconDefault/icon-padrão.webp' %>');"></div><!-- user-icon -->
+                        <input type="file" name="photo_icon" id="photo_icon" accept="image/*" style="display: none;">
+                        <label for="photo_icon">Selecione uma foto</label>
                     </div><!-- container-err -->
                 </form>
             </div><!-- container-icon-user -->
         </div><!-- separar -->
 
-        <div class="separar"></div><!-- separar -->
+        <div class="separar">
+            <div class="container-config-geral">
+                <h2>Configurações gerais</h2>
+
+                <div class="container-config-background">
+                    <div class="config-background-wraper">
+                        <div class="config-background">
+                            <div class="inputs-config-wraper">
+                                <label for="dark_mode">Modo claro</label>
+                                <input type="radio" name="background" id="light_mode" checked>
+                            </div><!-- inputs-config-wraper -->
+
+                            <div class="inputs-config-wraper">
+                                <label for="dark_mode">Modo escuro</label>
+                                <input type="radio" name="background" id="dark_mode">
+                            </div><!-- inputs-config-wraper -->
+
+                            <div class="inputs-config-wraper">
+                                <label for="personalizado">Personalizado</label>
+                                <input type="radio" name="background" id="personalizado">
+                            </div><!-- inputs-config-wraper -->
+                        </div><!-- config-background -->
+                    </div><!-- config-background-wraper -->
+                </div><!-- container-config-background -->
+            </div><!-- config-geral -->
+        </div><!-- separar -->
+
+        <input class="btn-input" type="submit" value="Salvar">
     </section><!-- container -->
 
     <div class="clear"></div><!-- clear -->

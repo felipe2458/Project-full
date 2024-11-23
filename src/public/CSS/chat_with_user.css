@@ -175,16 +175,8 @@ input[type="submit"]:hover{
 }
 
 .container-message::-webkit-scrollbar{
-    width: 8px;
-}
-
-.container-message::-webkit-scrollbar-thumb{
-    background-color: #27ae60;
-    border-radius: 5px;
-}
-
-.container-message::-webkit-scrollbar-track{
-    background-color: #353b48;
+    width: 0px;
+    height: 0px;
 }
 
 @media (max-width: 600px){
