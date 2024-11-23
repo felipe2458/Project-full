@@ -137,9 +137,9 @@ app.post('/login', async (req, res)=>{
     }
 });
 
-app.use('/:user', router);
+const players = new Map();
 
-io.on('connection', (socket) => {
+io.on('connection',(socket)=>{
     socket.on('send_message', (data)=>{
         io.emit('receive_message', data);
 
@@ -154,7 +154,27 @@ io.on('connection', (socket) => {
             console.error('Erro ao buscar chat:', err);
         });
     })
+
+    socket.on('player_connected', (data)=>{
+        if(!Array.from(players.values()).includes(data)){
+            players.set(socket.id, data);
+        }
+
+        io.emit('verificar_player', Array.from(players.values()));
+    });
+
+    socket.on('disconnect', ()=>{
+        const disconnect_player = players.get(socket.id);
+
+        if(disconnect_player){
+            players.delete(socket.id);
+        }
+
+        io.emit('verificar_player', Array.from(players.values()));
+    })
 });
+
+app.use('/:user', router);
 
 app.use(function(req, res, next){
     res.status(404).send('Esta página não existe!');

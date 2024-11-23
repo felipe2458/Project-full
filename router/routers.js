@@ -8,6 +8,7 @@ const server = http.createServer(app);
 const ioS = socketIo(server);
 
 const router_config = require('./router_config');
+const router_jogos = require('./router_jogos');
 
 const User = require('../mongoose/User');
 const Icon_user = require('../mongoose/Icon_user');
@@ -267,7 +268,16 @@ module.exports = (io)=>{
         }
     });
 
+    router.get('/jogos', (req, res)=>{
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            return res.render('central_de_jogos.ejs', { username: req.session.user });
+        }else{
+            return res.redirect('/login');
+        }
+    });
+
     router.use('/configuracoes', router_config);
+    router.use('/jogos', router_jogos);
 
     return router;
 }

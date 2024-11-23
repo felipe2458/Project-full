@@ -76,6 +76,7 @@ header .separar{
     padding: 20px;
     width: 100%;
     margin-top: 50px;
+    gap: 20px;
 }
 
 .applications{
