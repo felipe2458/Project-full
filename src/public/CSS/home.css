@@ -1,77 +1,95 @@
-*{
+:root{
+    --cor-fundo: #121212;
+    --cor-texto: #e0e0e0;
+    --cor-link: #4caf50;
+    --cor-fundo-secundario: #333;
+    --cor-fundo-hover: #4caf50;
+    --cor-link-ativo: #1e1e1e;
+    --cor-link-hover: rgb(44, 44, 44);
+    --cor-secundario: #444;
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+/* Estilos do body e da página */
+body {
     font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
     padding: 20px;
 }
 
-h1{
+/* Estilos do título */
+h1 {
     font-size: 2rem;
     margin-bottom: 30px;
     text-align: center;
-    color: #e0e0e0;
+    color: var(--cor-texto);
 }
 
-a{
+/* Estilos dos links */
+a {
     display: inline-block;
     font-size: 1.2rem;
-    color: #4caf50;
+    color: var(--cor-link);
     text-decoration: none;
     padding: 10px 20px;
     margin: 10px;
     border-radius: 5px;
-    background-color: #333;
+    background-color: var(--cor-fundo-secundario);
     transition: background-color 0.3s, color 0.3s;
 }
 
-a:hover{
-    background-color: #4caf50;
+a:hover {
+    background-color: var(--cor-fundo-hover);
     color: white;
 }
 
-a[href$="/home"]{
-    background-color: #1e1e1e;
+/* Estilo do link com o sufixo /home */
+a[href$="/home"] {
+    background-color: var(--cor-link-ativo);
 }
 
-a[href$="/home"]:hover{
-    background-color: #2c2c2c;
+a[href$="/home"]:hover {
+    background-color: var(--cor-link-hover);
 }
 
-a[href$="/register"], a[href$="/login"]{
-    background-color: #444;
+/* Estilo dos links de registro e login */
+a[href$="/register"], a[href$="/login"] {
+    background-color: var(--cor-secundario);
     color: #fff;
 }
 
-a[href$="/register"]:hover, a[href$="/login"]:hover{
-    background-color: #4caf50;
+a[href$="/register"]:hover, a[href$="/login"]:hover {
+    background-color: var(--cor-fundo-hover);
 }
 
-@media (max-width: 600px){
-    body{
+/* Responsividade */
+@media (max-width: 600px) {
+    body {
         padding: 10px;
     }
 
-    h1{
+    h1 {
         font-size: 1.5rem;
     }
 
-    a{
+    a {
         font-size: 1rem;
         padding: 8px 15px;
         margin: 8px;
     }
 }
 
-a[href$="/register"], a[href$="/login"]{
+/* Estilos para links de registro e login */
+a[href$="/register"], a[href$="/login"] {
     display: inline-block;
 }
 
-a[href$="/register"]:not(:last-child), a[href$="/login"]:not(:last-child){
+a[href$="/register"]:not(:last-child), a[href$="/login"]:not(:last-child) {
     margin-right: 15px;
 }

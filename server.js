@@ -13,7 +13,6 @@ const socketIo = require('socket.io');
 const io = socketIo(server);
 
 const User = require('./mongoose/User');
-const Chat = require('./mongoose/Chat');
 const router = require('./router/routers')(io);
 
 mongoose.connect('mongodb+srv://root:q8n7MKjqbgluikbZ@cluster0.zsdig.mongodb.net/Project-full?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
@@ -46,11 +45,13 @@ app.set('view engine', 'html');
 app.use('/public', express.static(path.join(__dirname, 'src/public')));
 app.set('views', path.join(__dirname, 'src/pages'));
 
-app.get('/', (req, res)=>{
+app.get('/', async (req, res)=>{
     if(req.cookies.username){
         req.session.user = req.cookies.username;
 
-        return res.render('home.ejs', { logado: true, username: req.session.user });
+        const user = await User.findOne({ name: req.session.user });
+
+        return res.render('home.ejs', { username: req.session.user, logado: true });
     }else{
         return res.render('home.ejs', { logado: false });
     }
@@ -71,7 +72,9 @@ app.post('/register', async function(req, res){
                 _id: new mongoose.Types.ObjectId(),
                 name: req.body.name.trim(),
                 password: pass,
-                icon: false,
+                friends: [],
+                icon: { data: null, contentType: null },
+                background: [{ darkmode: false }],
             }).then(()=>{
                 return res.redirect('/login');
             }).catch(err =>{
@@ -140,19 +143,21 @@ app.post('/login', async (req, res)=>{
 app.use('/:user', router);
 
 io.on('connection', (socket) => {
-    socket.on('send_message', (data)=>{
+    socket.on('send_message', async (data)=>{
         io.emit('receive_message', data);
 
         const { username, friend, message, time, day } = data;
 
-        Chat.findOne({ users: { $all: [username, friend] } }).then((result)=>{
-            if(result){
-                result.messages.push({ messageFrom: username, message, time, day });
-                result.save();
-            }
-        }).catch((err)=>{
-            console.error('Erro ao buscar chat:', err);
-        });
+        const user = await User.findOne({ name: username });
+        const friend_chat = await User.findOne({ name: friend });
+        const chat_user = await user.chats.find(chat => chat.users.includes(username) && chat.users.includes(friend));
+        const chat_friend = await friend_chat.chats.find(chat => chat.users.includes(friend) && chat.users.includes(username));
+
+        chat_user.messages.push({ messageFrom: username, message, time, day });
+        chat_friend.messages.push({ messageFrom: username, message, time, day });
+
+        user.save();
+        friend_chat.save();
     })
 });
 

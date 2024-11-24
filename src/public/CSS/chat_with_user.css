@@ -1,3 +1,21 @@
+:root{
+    --color-background: #121212;
+    --color-text: #e0e0e0;
+    --color-header: #1f1f1f;
+    --color-container: #2a2a2a;
+    --color-border-top: #121212;
+    --color-input-bg: #404552;
+    --color-input-placeholder: #7f8fa6;
+    --color-button-bg: #27ae60;
+    --color-button-hover: #1e8449;
+    --color-own-message: #27ae60;
+    --color-other-message: #487eb0;
+    --color-message-text: white;
+    --color-icon-border: #e0e0e0;
+    --box-shadow-light: rgba(0, 0, 0, 0.1);
+    --box-shadow-medium: rgba(0, 0, 0, 0.2);
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -7,8 +25,8 @@
 html, body{
     height: 100%;
     font-family: 'Poppins', sans-serif;
-    background: #121212;
-    color: #e0e0e0;
+    background: var(--color-background);
+    color: var(--color-text);
 }
 
 body{
@@ -21,9 +39,9 @@ header{
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    background-color: #1f1f1f;
-    color: #e0e0e0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-header);
+    color: var(--color-text);
+    box-shadow: 0 4px 8px var(--box-shadow-light);
 }
 
 .container-icon-friend{
@@ -37,8 +55,8 @@ header{
     height: 60px;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 3px solid var(--color-icon-border);
+    box-shadow: 0 2px 4px var(--box-shadow-medium);
 }
 
 .icon-friend{
@@ -60,8 +78,8 @@ header h2{
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    background-color: #2a2a2a;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    background-color: var(--color-container);
+    box-shadow: inset 0 0 10px var(--box-shadow-medium);
     border-radius: 15px 15px 0 0;
 }
 
@@ -93,8 +111,8 @@ header h2{
 
 .own-message{
     align-self: flex-end;
-    background-color: #27ae60;
-    color: white;
+    background-color: var(--color-own-message);
+    color: var(--color-message-text);
 }
 
 .own-message::after{
@@ -104,13 +122,13 @@ header h2{
     top: 10px;
     border-width: 10px 0 10px 10px;
     border-style: solid;
-    border-color: transparent transparent transparent #27ae60;
+    border-color: transparent transparent transparent var(--color-own-message);
 }
 
 .other-message{
     align-self: flex-start;
-    background-color: #487eb0;
-    color: white;
+    background-color: var(--color-other-message);
+    color: var(--color-message-text);
 }
 
 .other-message::after{
@@ -120,15 +138,15 @@ header h2{
     top: 10px;
     border-width: 10px 10px 10px 0;
     border-style: solid;
-    border-color: transparent #487eb0 transparent transparent;
+    border-color: transparent var(--color-other-message) transparent transparent;
 }
 
 .input-wraper{
     display: flex;
     gap: 10px;
     padding: 10px 20px;
-    background-color: #1f1f1f;
-    border-top: 2px solid #121212;
+    background-color: var(--color-header);
+    border-top: 2px solid var(--color-border-top);
 }
 
 input[type="text"]{
@@ -138,19 +156,19 @@ input[type="text"]{
     border-radius: 25px;
     font-size: 1rem;
     outline: none;
-    background-color: #404552;
-    color: #f5f6fa;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-input-bg);
+    color: var(--color-text);
+    box-shadow: 0 4px 8px var(--box-shadow-light);
 }
 
 input[type="text"]::placeholder{
-    color: #7f8fa6;
+    color: var(--color-input-placeholder);
 }
 
 input[type="submit"]{
     padding: 12px 25px;
-    background-color: #27ae60;
-    color: white;
+    background-color: var(--color-button-bg);
+    color: var(--color-message-text);
     border: none;
     border-radius: 25px;
     font-size: 1rem;
@@ -160,7 +178,7 @@ input[type="submit"]{
 }
 
 input[type="submit"]:hover{
-    background-color: #1e8449;
+    background-color: var(--color-button-hover);
 }
 
 @keyframes fadeIn{

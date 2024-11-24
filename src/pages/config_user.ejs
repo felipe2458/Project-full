@@ -1,62 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="/public/images/icons/icon_principal.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/public/CSS/config_user.css">
-    <title>Configurações</title>
-</head>
-<body>
-    <section class="container">
-        <div class="separar">
-            <div class="container-icon-user">
-                <form id="envi_photo_icon" accept="image/*" enctype="multipart/form-data">
-                    <div class="container-err">
-                        <div class="user-icon" style="background-image: url('<%= image ? image : '/public/user_icons/iconDefault/icon-padrão.webp' %>');"></div><!-- user-icon -->
-                        <input type="file" name="photo_icon" id="photo_icon" accept="image/*" style="display: none;">
-                        <label for="photo_icon">Selecione uma foto</label>
-                    </div><!-- container-err -->
-                </form>
-            </div><!-- container-icon-user -->
-        </div><!-- separar -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="/public/images/icons/icon_principal.ico">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/public/CSS/config_user.css">
+        <title>Configurações</title>
+    </head>
+    <body>
+        <section class="container">
+            <div class="separar">
+                <div class="container-icon-user">
+                    <form id="envi_photo_icon" accept="image/*" enctype="multipart/form-data">
+                        <div class="container-err">
+                            <div class="user-icon" style="background-image: url('<%= image ? image : '/public/user_icons/iconDefault/icon-padrão.webp' %>');"></div><!-- user-icon -->
+                            <input type="file" name="photo_icon" id="photo_icon" accept="image/*" style="display: none;">
+                            <label for="photo_icon">Selecione uma foto</label>
+                        </div><!-- container-err -->
+                    </form>
+                </div><!-- container-icon-user -->
+            </div><!-- separar -->
 
-        <div class="separar">
-            <div class="container-config-geral">
-                <h2>Configurações gerais</h2>
+            <div class="separar">
+                <div class="container-config-geral">
+                    <h2>Configurações gerais</h2>
+                    <div class="container-config-background">
+                        <div class="config-background-wraper">
+                            <div class="config-background">
+                                <div class="container-button-darkmode">
+                                    <input type="checkbox" name="darkmode" style="display: none;" id="darkmode" <% if(background.darkmode){ %> checked <% } %>>
+                                    <label for="darkmode">
+                                        <div class="button">
+                                            <div class="circle"></div><!-- circle -->
+                                        </div><!-- button -->
+                                        <span>Darkmode</span> 
+                                    </label>
+                                </div><!-- container-button-darkmode -->
+                                
+                                <div class="container-button-personalizado">
+                                    <input type="checkbox" name="personalizado" style="display: none;" id="personalizado">
+                                    <label for="personalizado">
+                                        <div class="button">
+                                            <div class="circle"></div><!-- circle -->
+                                        </div><!-- button -->
+                                        <span>Personalizado</span>
+                                    </label>
+                                </div><!-- container-button-personalizado -->
+                                
+                            </div><!-- config-background -->
+                        </div><!-- config-background-wraper -->
+                    </div><!-- container-config-background -->
+                </div><!-- config-geral -->
+            </div><!-- separar -->
 
-                <div class="container-config-background">
-                    <div class="config-background-wraper">
-                        <div class="config-background">
-                            <div class="inputs-config-wraper">
-                                <label for="dark_mode">Modo claro</label>
-                                <input type="radio" name="background" id="light_mode" checked>
-                            </div><!-- inputs-config-wraper -->
+            <input class="btn-input" type="submit" value="Salvar">
+        </section><!-- container -->
 
-                            <div class="inputs-config-wraper">
-                                <label for="dark_mode">Modo escuro</label>
-                                <input type="radio" name="background" id="dark_mode">
-                            </div><!-- inputs-config-wraper -->
+        <div class="clear"></div><!-- clear -->
 
-                            <div class="inputs-config-wraper">
-                                <label for="personalizado">Personalizado</label>
-                                <input type="radio" name="background" id="personalizado">
-                            </div><!-- inputs-config-wraper -->
-                        </div><!-- config-background -->
-                    </div><!-- config-background-wraper -->
-                </div><!-- container-config-background -->
-            </div><!-- config-geral -->
-        </div><!-- separar -->
-
-        <input class="btn-input" type="submit" value="Salvar">
-    </section><!-- container -->
-
-    <div class="clear"></div><!-- clear -->
-
-    <script src="/public/JS/JQuery.js"></script>
-    <script src="/public/JS/config_user.js"></script>
-</body>
+        <script src="/public/JS/JQuery.js"></script>
+        <script src="/public/JS/config_user.js"></script>
+    </body>
 </html>
