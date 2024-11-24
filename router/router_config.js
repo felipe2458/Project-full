@@ -1,5 +1,4 @@
 const router_config = require('express').Router({mergeParams: true});
-const mongoose = require('mongoose');
 const multer = require('multer');
 
 const storage = multer.memoryStorage();
@@ -9,13 +8,8 @@ const upload = multer({
 });
 
 const User = require('../mongoose/User');
-const Icon_user = require('../mongoose/Icon_user');
 
 router_config.post('/upload-icon', upload.single('photo_icon'), async (req, res) => {
-    if(!req.file){
-        return res.send('');
-    }
-
     try{
         const user = await User.findOne({ name: req.session.user });
 
@@ -23,44 +17,31 @@ router_config.post('/upload-icon', upload.single('photo_icon'), async (req, res)
             return res.status(404).send('Usuário não encontrado.');
         }
 
-        if(user.icon){
-            Icon_user.findOne({ username: req.session.user }).then((result)=>{
-                if(!result){
-                    return res.status(404).send('Usuário não encontrado.');
-                }
+        user.icon[0].data = req.file.buffer;
+        user.icon[0].contentType = req.file.mimetype;
 
-                result.imageName = req.file.originalname;
-                result.data = req.file.buffer;
-                result.contentType = req.file.mimetype;
+        user.save();
 
-                result.save();
-            }).catch((err)=>{
-                console.error('Erro ao atualizar ícone:', err);
-                return res.status(500).send('Erro ao atualizar ícone, tente novamente');
-            });
-        }else{
-            user.icon = true;
-
-            await Icon_user.create({
-                _id: new mongoose.Types.ObjectId(),
-                username: req.session.user,
-                imageName: req.file.originalname,
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-            });
-
-            await user.save();
-        }
-
-        return res.send();
+        return res.send('Ícone salvo com sucesso!');
     }catch(err){
         console.error('Erro ao salvar ícone:', err);
         res.status(500).send('Erro ao salvar o ícone.');
     }
 });
 
-router_config.post('/background', (req, res)=>{
-    res.send('Ola mundo!');
+router_config.post('/background', async (req, res)=>{
+    try{
+        const user = await User.findOne({ name: req.session.user });
+
+        user.background[0].darkmode = req.body.darkmode;
+
+        user.save();
+
+        return res.send('Background atualizado com sucesso!');
+    }catch(err){
+        console.error('Erro ao salvar background:', err);
+        return res.status(500).send('Erro ao salvar o background.');
+    }
 });
 
 module.exports = router_config;

@@ -30,17 +30,11 @@
                 %>
 
                 <% if(chat && user_and_friend.sort().toString() === usersChat.sort().toString()){
-                    chat.forEach(info =>{
-                        if(info.messageFrom === username){ %>
-                            <div class="message own-message">
-                                <p><%= info.message %></p>
-                            </div><!-- message -->
-                        <% }else{ %>
-                            <div class="message other-message">
-                                <p><%= info.message %></p>
-                            </div><!-- message -->
-                        <% }
-                    });
+                    chat.forEach(info =>{ %>
+                        <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
+                            <p><%= info.message %></p>
+                        </div><!-- message -->
+                    <% });
                 } %>
             </div><!-- message-wraper -->
         </div><!-- box-mensage -->

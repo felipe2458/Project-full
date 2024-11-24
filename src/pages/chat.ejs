@@ -22,33 +22,12 @@
     <section class="container">
         <div class="container-friends">
             <h1>Lista de amigos:</h1>
-
-            <% let index = 0; %>
-
             <div class="friends-wraper">
-                <% friends.forEach((friend)=>{ %>
+                <% friendsList.forEach((friend)=>{ %>
                     <div class="friend">
-                        <%  
-                            const friendsIconsValFiltered = friendsIconsVal.filter(friendIconVal =>{
-                                return friendIconVal.nameFriend.includes(friend);
-                            });
-                        %>
+                        <div class="friend-icon" style="background-image: url('<%= friend.image ? friend.image : '../public/user_icons/iconDefault/icon-padrão.webp' %>');"></div><!-- friend-icon -->
 
-                        <% if(friendsIconsValFiltered[0].icon){
-                            let name = friendsIconsValFiltered[0].nameFriend;
-                            let icon = iconsFriends.filter(icon =>{
-                                return icon.username.includes(name);
-                            });
-                        %>
-
-                            <div class="friend-icon" style="background-image: url('<%= icon[0].data %>');"></div><!-- friend-icon -->
-                        <% }else{ %>
-                            <div class="friend-icon" style="background-image: url(../public/user_icons/iconDefault/icon-padrão.webp);"></div><!-- friend-icon -->
-                        <% } %>
-
-                        <% index++; %>
-
-                        <a href="chat/<%= friend.split('_').join('-') %>"><div class="friend-name"><%= friend %></div><!-- friend-name --></a>
+                        <a href="chat/<%= friend.name.split('_').join('-') %>"><div class="friend-name"><%= friend.name %></div><!-- friend-name --></a>
                     </div><!-- friend -->
                 <% }) %>
             </div><!-- friends-wraper -->

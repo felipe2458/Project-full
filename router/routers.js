@@ -1,21 +1,10 @@
 const router = require('express').Router({mergeParams: true});
-const app = require('express')();
-const mongoose = require('mongoose');
-const multer = require('multer');
-const http = require('http');
-const socketIo = require('socket.io');
-const server = http.createServer(app);
-const ioS = socketIo(server);
-
 const router_config = require('./router_config');
 
 const User = require('../mongoose/User');
-const Icon_user = require('../mongoose/Icon_user');
-const Friends = require('../mongoose/Friends');
-const Chat = require('../mongoose/Chat');
 
 module.exports = (io)=>{
-    router.get('/home', (req, res)=>{
+    router.get('/home', async (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
             const userCookie = req.cookies.username;
 
@@ -23,152 +12,88 @@ module.exports = (io)=>{
                 req.session.user = userCookie;
             }
 
-            User.findOne({ name: req.session.user }).exec((err, user)=>{
-                const icon_check = user.icon;
+            const user = await User.findOne({ name: req.session.user });
 
-                if(icon_check){
-                    Icon_user.findOne({ username: req.session.user }).then((result)=>{
-                        const base64Image = result.data.toString('base64');
-                        const imageSrc = `data:${result.contentType};base64,${base64Image}`;
+            const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : null;
 
-                        return res.render('page_initial.ejs', {username: req.session.user, image: imageSrc, icon: icon_check});
-                    }).catch((err)=>{
-                        console.error('Erro ao buscar ícone:', err);
-                        return res.status(500).send('Erro ao buscar ícone, tente novamente');
-                    });
-                }else{
-                    return res.render('page_initial.ejs', {username: req.session.user, image: null, icon: icon_check});
+            return res.render('page_initial.ejs', { username: req.session.user, image: imageSrc });
+        }else{
+            return res.redirect('/login');
+        }
+    });
+
+    router.get('/configuracoes', async (req, res)=>{
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            const user = await User.findOne({ name: req.session.user });
+            const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
+
+            return res.render('config_user.ejs', { username: req.session.user, image: imageSrc, background: user.background[0] });
+        }else{
+            return res.redirect('/login');
+        }
+    });
+
+    router.get('/chat', async (req, res)=>{
+        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
+            const users = await User.find({});
+            const user = await User.findOne({ name: req.session.user });
+            const friends = user.friends;
+
+            let usersList = [];
+            let friendsList = [];
+
+            users.forEach(async (user) =>{
+                let base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
+                let imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
+
+                usersList.push(user.name);
+
+                if(friends.includes(user.name) ){
+                    friendsList.push({
+                        name: user.name,
+                        image: imageSrc
+                    })
                 }
-            })
+            });
+
+            return res.render('chat.ejs', { username: req.session.user, usersList, friendsList });
         }else{
             return res.redirect('/login');
         }
     });
 
-    router.get('/configuracoes', (req, res)=>{
+    router.get('/chat/:friend', async (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
-            Icon_user.findOne({ username: req.session.user }).then((result)=>{
-                if(!result){
-                    return res.render('config_user.ejs', { username: req.session.user, image: null, });
-                }
+            const user = await User.findOne({ name: req.session.user });
+            const friend = await User.findOne({ name: req.params.friend.split('-').join('_') });
+            let chat_ejs = await user.chats.find(chat => chat.users.includes(req.session.user) && chat.users.includes(friend.name));
+            const chat_friend = await friend.chats.find(chat => chat.users.includes(req.session.user) && chat.users.includes(friend.name));
 
-                const image = result.data.toString('base64');
-                const imageSrc = `data:${result.contentType};base64,${image}`;
+            const base64Image =  friend.icon[0].data ? friend.icon[0].data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${friend.icon[0].contentType};base64,${base64Image}` : false;
 
-                return res.render('config_user.ejs', { username: req.session.user, image: imageSrc });
-            }).catch((err)=>{
-                console.error('Erro ao buscar ícone:', err);
-                return res.status(500).send('Erro ao buscar ícone, tente novamente');
-            });
-        }else{
-            return res.redirect('/login');
-        }
-    });
-
-    router.get('/chat', (req, res)=>{
-        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
-            User.find({}).exec().then((users)=>{
-                let usersList = [];
-
-                users.forEach((user)=>{
-                    usersList.push(user.name);
+            if(!chat_ejs){
+                user.chats.push({
+                    users: [req.session.user, friend.name],
+                    messages: []
                 });
 
-                usersList.splice(usersList.indexOf(req.session.user), 1);
+                user.save();
+                chat_ejs = await user.chats.find(chat => chat.users.includes(req.session.user) && chat.users.includes(friend.name));
+            }
 
-                Friends.findOne({ username_logged_in: req.session.user }).then((result)=>{
-                    if(!result){
-                        return res.render('chat.ejs', { username: req.session.user, usersList, friends: [], friendsIconsVal: [], friendsIcons: [] });
-                    }
-
-                    User.find({}).exec().then((users)=>{
-                        let usersListFriends = [];
-                        let friendsList = [];
-                        let friendsIconsVal = [];
-
-                        users.forEach((user)=>{
-                            usersListFriends.push({ name: user.name, icon: user.icon });
-                        });
-
-                        result.Friends.forEach((friend)=>{
-                            friendsList.push({ name: friend });
-                        });
-
-                        for(let i = 0; i < usersListFriends.length; i++){
-                            if(friendsList.some((friend) => friend.name === usersListFriends[i].name)){
-                                friendsIconsVal.push({ nameFriend: usersListFriends[i].name, icon: usersListFriends[i].icon });
-                            }
-                        }
-
-                        Icon_user.find({}).exec().then((icons)=>{
-                            let iconsFriends = [];
-
-                            icons.forEach((icon)=>{
-                                const base64Image = icon.data.toString('base64');
-                                const imageSrc = `data:${icon.contentType};base64,${base64Image}`;
-                                iconsFriends.push({ username: icon.username, data: imageSrc });
-                            });
-
-                            const index_user_logged_in = iconsFriends.findIndex(user => user.username === req.session.user );
-
-                            if(index_user_logged_in !== -1){
-                                iconsFriends.splice(index_user_logged_in, 1);
-                            }
-
-                            return res.render('chat.ejs', { username: req.session.user, usersList, friends: result.Friends, friendsIconsVal, iconsFriends });
-                        }).catch((err)=>{
-                            console.error('Erro ao buscar os ícones dos amigos:', err);
-                            return res.status(500).send('Erro ao buscar os ícones dos amigos, tente novamente');
-                        });
-                    }).catch((err)=>{
-                        console.error('Erro ao buscar os amigos:', err);    
-                        return res.status(500).send('Erro ao buscar os amigos, tente novamente');
-                    });
-
-                }).catch((err)=>{
-                    console.error('Erro ao buscar os amigos:', err);
-                    return res.status(500).send('Erro ao buscar os amigos, tente novamente');
+            if(!chat_friend){                
+                friend.chats.push({
+                    users: [friend.name, req.session.user],
+                    messages: []
                 });
-            }).catch((err)=>{
-                console.error("Ouve um erro ao buscar os usuários:", err);
-                return res.status(500).send('Erro ao buscar os usuários, volte para a página inicial <a href="/">Home</a>');
-            });
-        }else{
-            return res.redirect('/login');
-        }
-    });
 
-    router.get('/chat/:friend', (req, res)=>{
-        const friend = req.params.friend.split('-').join('_');
+                friend.save();
+            }
 
-        if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
-            Icon_user.findOne({ username: friend }).then((result_icon)=>{
-                Chat.findOne({ users: { $all: [req.session.user, friend] } }).then((result_chat)=>{
-                    if(!result_chat){
-                        const newChat = new Chat({
-                            _id: new mongoose.Types.ObjectId(),
-                            users: [req.session.user, friend],
-                            messages: []
-                        });
-
-                        newChat.save();
-                    }
-
-                    const image = result_icon ? result_icon.data.toString('base64') : null;
-                    const imageSrc = image ? `data:${result_icon.contentType};base64,${image}` : null;
-                    const chat = result_chat ? result_chat.messages : [];
-                    const usersChat = result_chat ? result_chat.users : [];
-
-                    return res.render('chat_with_user.ejs', { username: req.session.user, friend, image: imageSrc, chat, usersChat });
-                }).catch((err)=>{
-                    console.error('Erro ao buscar chat:', err);
-                    return res.status(500).send('Erro ao buscar chat, tente novamente');
-                });
-            }).catch((err)=>{
-                console.error('Erro ao buscar ícone:', err);
-                return res.status(500).send('Erro ao buscar ícone, tente novamente');
-            });
-
+            return res.render('chat_with_user.ejs', { username: req.session.user, friend: friend.name, image: imageSrc, chat: chat_ejs.messages, usersChat: chat_ejs.users });
         }else{
             return res.redirect('/login');
         }
@@ -206,12 +131,12 @@ module.exports = (io)=>{
                     return usersListSorted;
                 };
 
-                Friends.findOne({ username_logged_in: req.session.user }).then((result)=>{
+                User.findOne({ name: req.session.user }).then((result)=>{
                     if(!result){
                         return res.render('busca_users.ejs', { username: req.session.user, usersList: buscarUser(), friends: [] });
                     }
 
-                    return res.render('busca_users.ejs', { username: req.session.user, usersList: buscarUser(), friends: result.Friends });
+                    return res.render('busca_users.ejs', { username: req.session.user, usersList: buscarUser(), friends: result.friends });
                 }).catch((err)=>{
                     console.error('Erro ao buscar os amigos:', err);
                     return res.status(500).send('Erro ao buscar os amigos, tente novamente');
@@ -229,38 +154,19 @@ module.exports = (io)=>{
     router.post('/add-friend', async (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
             try{
-                Friends.findOne({ username_logged_in: req.session.user }).then((user)=>{
-                    if(!user){
-                        Friends.create({
-                            _id: new mongoose.Types.ObjectId(),
-                            username_logged_in: req.session.user,
-                            Friends: [req.body.user_friend]
-                        })
+                const user = await User.findOne({ name: req.session.user });
 
-                        return
-                    }else{
-                        const friends = user.Friends;
+                if(user.friends.includes(req.body.user_friend)){
+                    user.friends.splice(user.friends.indexOf(req.body.user_friend), 1);
+                    return user.save();
+                } 
 
-                        if(!friends.includes(req.body.user_friend)){
-                            friends.push(req.body.user_friend);
-                            user.save();
-                        }else{
-                            let index = friends.indexOf(req.body.user_friend);
+                user.friends.push(req.body.user_friend);
 
-                            if(index !== -1){
-                                friends.splice(index, 1)
-                                user.save();
-                            }
-                        }
-
-                        return res.send('');
-                    }
-                }).catch((err)=>{
-                    console.error('Erro ao buscar os amigos:', err);
-                    return res.status(500).send('Erro ao buscar os amigos, tente novamente');
-                });
+                return user.save();
             }catch(err){
-                console.error(err);
+                console.error('Erro ao adicionar amigo:', err);
+                return res.status(500).send('Erro ao adicionar amigo, tente novamente');
             }
         }else{
             return res.redirect('/login');

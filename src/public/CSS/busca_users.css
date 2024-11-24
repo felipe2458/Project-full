@@ -1,3 +1,17 @@
+:root{
+    --color-background: #121212;
+    --color-text: #e0e0e0;
+    --color-heading: #fff;
+    --color-container: #1e1e1e;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+    --color-shadow-hover: rgba(0, 0, 0, 0.6);
+    --color-secondary-text: #dcdde1;
+    --color-primary: #27ae60;
+    --color-primary-hover: #fff;
+    --color-remove: #e74c3c;
+    --color-remove-hover: #c0392b;
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -6,8 +20,8 @@
 
 body{
     font-family: 'Poppins', sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--color-background);
+    color: var(--color-text);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -19,7 +33,7 @@ body{
 h2{
     font-size: 1.6rem;
     margin-bottom: 20px;
-    color: #fff;
+    color: var(--color-heading);
 }
 
 .container-users{
@@ -32,10 +46,10 @@ h2{
 }
 
 .users-wraper{
-    background-color: #1e1e1e;
+    background-color: var(--color-container);
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 8px var(--color-shadow);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,13 +58,13 @@ h2{
 
 .users-wraper:hover{
     transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 12px var(--color-shadow-hover);
 }
 
 .users-wraper p{
     font-size: 1.1rem;
     font-weight: 600;
-    color: #dcdde1;
+    color: var(--color-secondary-text);
     margin-right: 15px;
 }
 
@@ -63,9 +77,9 @@ h2{
 .add-friend label{
     font-size: 1rem;
     font-weight: 500;
-    color: #27ae60;
-    background-color: #1e1e1e;
-    border: 2px solid #27ae60;
+    color: var(--color-primary);
+    background-color: var(--color-container);
+    border: 2px solid var(--color-primary);
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
@@ -73,33 +87,36 @@ h2{
 }
 
 .add-friend label:hover{
-    background-color: #27ae60;
-    color: #fff;
+    background-color: var(--color-primary);
+    color: var(--color-primary-hover);
 }
 
 .add-friend label[title="remover"]{
-    background-color: #e74c3c;
-    border-color: #e74c3c;
-    color: #fff;
+    background-color: var(--color-remove);
+    border-color: var(--color-remove);
+    color: var(--color-primary-hover);
 }
 
 .add-friend label[title="remover"]:hover{
-    background-color: #c0392b;
-    border-color: #c0392b;
+    background-color: var(--color-remove-hover);
+    border-color: var(--color-remove-hover);
 }
 
 @media (max-width: 768px){
     .container-users{
         grid-template-columns: 1fr 1fr;
     }
+    
 }
 
 @media (max-width: 480px){
     .container-users{
         grid-template-columns: 1fr;
     }
-
+    
     h2{
         font-size: 1.4rem;
     }
+    
 }
+

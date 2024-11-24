@@ -17,11 +17,7 @@
 
         <div class="separar">
             <div class="container-icon-user">
-                <% if(icon){ %>
-                    <div class="icon-user" style="background-image: url('<%= image %>');"></div>
-                <% }else{ %>
-                    <div class="icon-user" style="background-image: url(../public/user_icons/iconDefault/icon-padrão.webp);"></div>
-                <% } %>
+                <div class="icon-user" style="background-image: url('<%= image ? image : '/public/user_icons/iconDefault/icon-padrão.webp' %>');"></div><!-- icon-user -->
             </div><!-- container-icon-user -->
         </div><!-- Separar -->
     </header>

@@ -1,32 +1,42 @@
-/* Definições gerais */
-body {
+:root{
+    --color-background-dark: #121212;
+    --color-text-light: #e0e0e0;
+    --color-background-light: #47b64b;
+    --color-border-dark: #444;
+    --color-background-darkmode: #2c2c2c;
+    --color-text-dark: #ddd;
+    --color-blue: #007bff;
+    --color-green: #28a745;
+    --color-hover-light: #444;
+    --color-hover-text: whitesmoke;
+}
+
+body{
     font-family: 'League Spartan', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #121212;  /* Fundo escuro */
-    color: #e0e0e0;  /* Texto claro para contraste */
+    background-color: var(--color-background-dark);
+    color: var(--color-text-light);
 }
 
-.container {
+.container{
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Espaços e separadores */
-.separar {
+.separar{
     margin-bottom: 30px;
 }
 
-/* Estilo do container do ícone do usuário */
-.container-icon-user {
+.container-icon-user{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.container-err {
+.container-err{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,91 +44,123 @@ body {
     text-align: center;
 }
 
-.user-icon {
+.user-icon{
     width: 120px;
     height: 120px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;
     margin-bottom: 15px;
-    border: 2px solid #444;
+    border: 2px solid var(--color-border-dark);
 }
 
-#photo_icon {
+#photo_icon{
     display: none;
 }
 
-label[for="photo_icon"] {
+label[for="photo_icon"]{
     padding: 10px 20px;
-    background-color: #47b64b;  /* Fundo escuro */
-    color: #ddd;  /* Texto claro */
+    background-color: var(--color-background-light);
+    color: var(--color-text-dark);
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
-label[for="photo_icon"]:hover {
-    background-color: #444;  /* Cor um pouco mais clara ao passar o mouse */
-    color: whitesmoke;
+label[for="photo_icon"]:hover{
+    background-color: var(--color-border-dark);
+    color: var(--color-hover-text);
 }
 
-/* Configurações gerais */
-.container-config-geral {
-    background-color: #2c2c2c;  /* Fundo escuro */
+.container-config-geral{
+    background-color: var(--color-background-darkmode);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     padding: 30px;
 }
 
-.container-config-geral h2 {
+.container-config-geral h2{
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
-    color: #ddd;  /* Texto claro */
+    color: var(--color-text-dark);
 }
 
-.container-config-background {
+.container-config-background{
     margin-top: 20px;
 }
 
-.config-background-wraper {
+.config-background-wraper{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.config-background {
+.config-background{
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-.inputs-config-wraper {
+.container-button-darkmode,.container-button-personalizado{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 15px;
 }
 
-.inputs-config-wraper label {
-    margin-right: 10px;
+.container-button-darkmode .button,.container-button-personalizado .button{
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background-color: var(--color-blue);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.container-button-darkmode .button .circle,.container-button-personalizado .button .circle{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: left 0.3s ease;
+}
+
+.container-button-darkmode input[type="checkbox"]:checked + label .button,
+.container-button-personalizado input[type="checkbox"]:checked + label .button{
+    background-color: var(--color-green);
+}
+
+.container-button-darkmode input[type="checkbox"]:checked + label .button .circle,
+.container-button-personalizado input[type="checkbox"]:checked + label .button .circle{
+    left: 30px;
+}
+
+.container-button-darkmode label,.container-button-personalizado label{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+}
+
+.container-button-darkmode span,.container-button-personalizado span{
     font-size: 16px;
-    color: #ddd;  /* Texto claro */
+    color: var(--color-text-dark);
 }
 
-.inputs-config-wraper input[type="radio"] {
-    width: 20px;
-    height: 20px;
-}
-
-/* Botão de salvar */
-.btn-input {
+.btn-input{
     display: block;
     width: 100%;
     max-width: 200px;
     margin: 30px auto;
     padding: 12px;
-    background-color: #47b64b;
+    background-color: var(--color-background-light);
     color: white;
     border: none;
     border-radius: 5px;
@@ -127,35 +169,33 @@ label[for="photo_icon"]:hover {
     transition: background-color 0.3s ease;
 }
 
-.btn-input:hover {
-    background-color: #444;  /* Cor um pouco mais clara ao passar o mouse */
+.btn-input:hover{
+    background-color: var(--color-border-dark);
 }
 
-/* Clearfix */
-.clear {
+.clear{
     clear: both;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .container {
+@media (max-width: 768px){
+    .container{
         padding: 15px;
     }
 
-    .container-config-geral {
+    .container-config-geral{
         padding: 20px;
     }
 
-    .user-icon {
+    .user-icon{
         width: 100px;
         height: 100px;
     }
 
-    .inputs-config-wraper label {
+    .inputs-config-wraper label{
         font-size: 14px;
     }
 
-    .btn-input {
+    .btn-input{
         width: 100%;
     }
 }
