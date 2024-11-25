@@ -8,6 +8,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="/public/CSS/config_user.css">
+        <%- background_val %>
         <title>Configurações</title>
     </head>
     <body>
@@ -31,7 +32,7 @@
                         <div class="config-background-wraper">
                             <div class="config-background">
                                 <div class="container-button-darkmode">
-                                    <input type="checkbox" name="darkmode" style="display: none;" id="darkmode" <% if(background.darkmode){ %> checked <% } %>>
+                                    <input type="checkbox" name="darkmode" style="display: none;" id="darkmode" <% if(background_check){ %> checked <% } %>>
                                     <label for="darkmode">
                                         <div class="button">
                                             <div class="circle"></div><!-- circle -->
@@ -39,17 +40,6 @@
                                         <span>Darkmode</span> 
                                     </label>
                                 </div><!-- container-button-darkmode -->
-                                
-                                <div class="container-button-personalizado">
-                                    <input type="checkbox" name="personalizado" style="display: none;" id="personalizado">
-                                    <label for="personalizado">
-                                        <div class="button">
-                                            <div class="circle"></div><!-- circle -->
-                                        </div><!-- button -->
-                                        <span>Personalizado</span>
-                                    </label>
-                                </div><!-- container-button-personalizado -->
-                                
                             </div><!-- config-background -->
                         </div><!-- config-background-wraper -->
                     </div><!-- container-config-background -->

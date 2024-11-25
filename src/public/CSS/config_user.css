@@ -1,16 +1,3 @@
-:root{
-    --color-background-dark: #121212;
-    --color-text-light: #e0e0e0;
-    --color-background-light: #47b64b;
-    --color-border-dark: #444;
-    --color-background-darkmode: #2c2c2c;
-    --color-text-dark: #ddd;
-    --color-blue: #007bff;
-    --color-green: #28a745;
-    --color-hover-light: #444;
-    --color-hover-text: whitesmoke;
-}
-
 body{
     font-family: 'League Spartan', sans-serif;
     margin: 0;

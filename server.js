@@ -14,6 +14,7 @@ const io = socketIo(server);
 
 const User = require('./mongoose/User');
 const router = require('./router/routers')(io);
+const background = require('./router/config/background');
 
 mongoose.connect('mongodb+srv://root:q8n7MKjqbgluikbZ@cluster0.zsdig.mongodb.net/Project-full?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
     console.log("Conectado com sucesso ao MongoDB");
@@ -51,9 +52,11 @@ app.get('/', async (req, res)=>{
 
         const user = await User.findOne({ name: req.session.user });
 
-        return res.render('home.ejs', { username: req.session.user, logado: true });
+        const background_val = user.background[0].darkmode ? background[0].darkmode.home : background[0].lightmode.home
+
+        return res.render('home.ejs', { username: req.session.user, logado: true, background_val });
     }else{
-        return res.render('home.ejs', { logado: false });
+        return res.render('home.ejs', { logado: false, background_val: background.lightmode.home });
     }
 });
 
@@ -140,7 +143,7 @@ app.post('/login', async (req, res)=>{
     }
 });
 
-app.use('/:user', router);
+const players = new Map();
 
 io.on('connection', (socket) => {
     socket.on('send_message', async (data)=>{
@@ -159,7 +162,27 @@ io.on('connection', (socket) => {
         user.save();
         friend_chat.save();
     })
+
+    socket.on('player_connected', (data)=>{
+        if(!Array.from(players.values()).includes(data)){
+            players.set(socket.id, data);
+        }
+
+        io.emit('verificar_player', Array.from(players.values()));
+    });
+
+    socket.on('disconnect', ()=>{
+        const disconnect_player = players.get(socket.id);
+
+        if(disconnect_player){
+            players.delete(socket.id);
+        }
+
+        io.emit('verificar_player', Array.from(players.values()));
+    })
 });
+
+app.use('/:user', router);
 
 app.use(function(req, res, next){
     res.render('page404.ejs');

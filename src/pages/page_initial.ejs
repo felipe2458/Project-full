@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
     <link rel="stylesheet" href="../public/CSS/page_initial.css">
+    <%- background_val %>
     <title>Página inicial</title>
 </head>
 <body>
@@ -24,7 +25,11 @@
 
     <section class="container-applications">
         <div class="applications">
-            <a href="/<%= username.split('_').join('-') %>/chat">ir para o chat</a>
+            <a href="chat">ir para o chat</a>
+        </div><!-- applications -->
+
+        <div class="applications">
+            <a href="jogos">jogos</a>
         </div><!-- applications -->
     </section>
 </body>

@@ -39,6 +39,9 @@ $(function(){
                 personalizado: personalizado,
             }),
             contentType: 'application/json',
+            success: function(data){
+                window.location.reload();
+            },
             error: function(err) {
                 console.error('Erro no envio:', err);
             }
