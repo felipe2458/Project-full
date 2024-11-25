@@ -149,19 +149,45 @@ const players = new Map();
 io.on('connection', async (socket) => {
     socket.on('send_message', async (data)=>{
         io.emit('receive_message', data);
+        const { username, friend, message, message_voice, time, day } = data;
 
-        const { username, friend, message, time, day } = data;
+        const message_val = message.length > 0 ? data.message  : '';
 
-        const user = await User.findOne({ name: username });
-        const friend_chat = await User.findOne({ name: friend });
-        const chat_user = await user.chats.find(chat => chat.users.includes(username) && chat.users.includes(friend));
-        const chat_friend = await friend_chat.chats.find(chat => chat.users.includes(friend) && chat.users.includes(username));
+        await User.updateOne(
+            { name: username, "chats.users": friend },
+            {
+                $push: {
+                    "chats.$.messages": {
+                        messageFrom: username,
+                        message: message_val,
+                        message_voice: {
+                            data: message_voice.data,
+                            contentType: message_voice.contentType
+                        },
+                        time: time,
+                        day: day
+                    }
+                }
+            }
+        );
 
-        chat_user.messages.push({ messageFrom: username, message, time, day });
-        chat_friend.messages.push({ messageFrom: username, message, time, day });
-
-        user.save();
-        friend_chat.save();
+        await User.updateOne(
+            { name: friend, "chats.users": username },
+            {
+                $push: {
+                    "chats.$.messages": {
+                        messageFrom: username,
+                        message: message_val,
+                        message_voice: {
+                            data: message_voice.data,
+                            contentType: message_voice.contentType
+                        },
+                        time: time,
+                        day: day
+                    }
+                }
+            }
+        );
     })
 
     socket.on('player_connected', async (data)=>{

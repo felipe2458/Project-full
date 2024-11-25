@@ -8,20 +8,99 @@ $(function(){
         }
     }
 
-    $('#button').click((e)=>{
+    const voiceMessage = $('.message-voice');
+
+    let midia;
+    let start_voice = false;
+    const container_audio = $('.container-audio');
+
+    voiceMessage.click((e) =>{
+        if(container_audio.is(':empty')){
+            if(typeof MediaRecorder === 'undefined'){
+                alert('Seu navegador não suporta gravação de áudio');
+                return;
+            }
+
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream =>{
+                if(midia && midia.state !== "inactive"){
+                    midia.stop();
+                }
+
+                midia = new MediaRecorder(stream);
+
+                let chunks = [];
+
+                midia.ondataavailable = function(e){
+                    chunks.push(e.data);
+                };
+
+                midia.onstop = () =>{
+                    const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+                    const contentType = blob.type;
+                    const reader = new FileReader();
+
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = ()=>{
+                        const audio = document.createElement('audio');
+                        audio.src = reader.result;
+                        audio.controls = true;
+                        container_audio.empty();
+                        container_audio.css('display', 'flex');
+                        container_audio.append(audio);
+                        $('input[type="text"]').attr('disabled', true);
+
+                        $('#form').one('submit', e => {
+                            const now = new Date();
+                            const hours = now.getHours().toString().padStart(2, '0');
+                            const minutes = now.getMinutes().toString().padStart(2, '0');
+                            const day = now.toISOString().split('T')[0]; 
+                            const time = hours + ':' + minutes;
+
+                            const message_voice = {
+                                data: reader.result,
+                                contentType
+                            };
+
+                            container_audio.empty();
+                            container_audio.css('display', 'none');
+                            $('input[type="text"]').removeAttr('disabled');
+
+                            socket.emit('send_message', { username, friend, message, message_voice, time, day });
+
+                            scrollToBottom();
+                            e.preventDefault();
+                        });
+                        
+                    }
+                };
+
+                if(!start_voice){
+                    start_voice = true;
+                    midia.start();
+                }else{
+                    start_voice = false;
+                    midia.stop();
+                }
+            }).catch(err =>{
+                console.error(err);
+                alert('Permita o uso do microfone para enviar mensagens de voz');
+            });
+        }
+    });
+
+
+    $('#form').submit((e)=>{
         const message = $('#message').val();
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        const day = now.toISOString().split('T')[0];
+        const day = now.toISOString().split('T')[0]; 
 
         const time = hours + ':' + minutes;
 
         if(message.trim() !== ''){
-            socket.emit('send_message', { username, friend, message, time, day });
+            socket.emit('send_message', { username, friend, message, message_voice: '', time, day });
             $('#message').val('');
-
-            return true;
         }
 
         e.preventDefault();
@@ -30,6 +109,8 @@ $(function(){
     socket.on('receive_message', (data)=>{
         const isOwnMessage = data.username === username;
         const messageClass = isOwnMessage ? 'own-message' : 'other-message';
+        const message = data.message.length > 0 ? data.message  : '';
+        const message_voice = data.message_voice.data ? data.message_voice.data : '';
 
         const users_chat_name = [data.username, data.friend];
 
@@ -38,9 +119,15 @@ $(function(){
         }
 
         if(users_chat.sort().toString() === users_chat_name.sort().toString()){
-            $('.message-wraper').append(`
-                <div class="message ${messageClass}"><p>${data.message}</p></div>
-            `);
+            if(message_voice.length > 0){
+                $('.message-wraper').append(`
+                    <div class="message ${messageClass}"><audio controls src="${message_voice}"></audio></div>
+                `);
+            }else{
+                $('.message-wraper').append(`
+                    <div class="message ${messageClass}"><p>${message}</p></div>
+                `);
+            }
 
             scrollToBottom();
         }

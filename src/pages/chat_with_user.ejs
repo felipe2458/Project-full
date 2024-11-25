@@ -32,17 +32,31 @@
 
                 <% if(chat && user_and_friend.sort().toString() === usersChat.sort().toString()){
                     chat.forEach(info =>{ %>
-                        <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
-                            <p><%= info.message %></p>
-                        </div><!-- message -->
+                        <% if(info.message.length > 0){ %>
+                            <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
+                                <p><%= info.message %></p>
+                            </div><!-- message -->
+                        <% } %>
+
+                        <% if(info.message_voice[0].data !== ''){ %>
+                            <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
+                                <audio controls="true" src="<%= info.message_voice[0].data %>"></audio>
+                            </div><!-- message -->
+                        <% } %>
                     <% });
                 } %>
             </div><!-- message-wraper -->
         </div><!-- box-mensage -->
 
         <div class="input-wraper">
-            <input type="text" name="message" id="message">
-            <input type="submit" name="action" id="button" value="Enviar">
+            <form id="form">
+                <div class="container-audio" style="display: none;"></div><!-- container-audio -->
+                <div class="container-inputs">
+                    <input type="text" name="message" id="message" placeholder="Digite sua mensagem">
+                    <div class="message-voice" s;"></div><!-- message-voice -->
+                    <input type="submit" name="action" id="button" value="Enviar">
+                </div><!-- container-inputs -->
+            </form>
         </div><!-- input-wraper -->
     </section>
 </body>

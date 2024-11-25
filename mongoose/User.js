@@ -17,7 +17,11 @@ const userSchema = new Schema({
         users: [{ type: String, required: false }],
         messages: [{
             messageFrom: { type: String, required: false },
-            message: { type: String, required: false },
+            message_voice: [{
+                data: { type: Buffer, required: false, default: ''},
+                contentType: { type: String, required: false, default: '' }
+            }],
+            message: { type: String, required: false, default: '' },
             time: { type: String, required: false },
             day: { type: String, required: false }
         }]
