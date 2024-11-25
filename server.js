@@ -15,6 +15,7 @@ const io = socketIo(server);
 const User = require('./mongoose/User');
 const router = require('./router/routers')(io);
 const background = require('./router/config/background');
+const { match } = require('assert');
 
 mongoose.connect('mongodb+srv://root:q8n7MKjqbgluikbZ@cluster0.zsdig.mongodb.net/Project-full?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
     console.log("Conectado com sucesso ao MongoDB");
@@ -56,7 +57,7 @@ app.get('/', async (req, res)=>{
 
         return res.render('home.ejs', { username: req.session.user, logado: true, background_val });
     }else{
-        return res.render('home.ejs', { logado: false, background_val: background.lightmode.home });
+        return res.render('home.ejs', { logado: false, background_val: background[0].lightmode.home });
     }
 });
 
@@ -138,14 +139,14 @@ app.post('/login', async (req, res)=>{
             return res.redirect('/login');
         }
     }catch(err){
-        console.log('Erro ao validar login:', err);
+        console.error('Erro ao validar login:', err);
         return res.status(500).send('Erro ao validar login. Tente novamente. <a href="/">Voltar</a>');
     }
 });
 
 const players = new Map();
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     socket.on('send_message', async (data)=>{
         io.emit('receive_message', data);
 
@@ -163,9 +164,14 @@ io.on('connection', (socket) => {
         friend_chat.save();
     })
 
-    socket.on('player_connected', (data)=>{
+    socket.on('player_connected', async (data)=>{
         if(!Array.from(players.values()).includes(data)){
-            players.set(socket.id, data);
+            const player = {
+                name: data,
+                id: socket.id,
+            }
+
+            players.set(player.id, player);
         }
 
         io.emit('verificar_player', Array.from(players.values()));

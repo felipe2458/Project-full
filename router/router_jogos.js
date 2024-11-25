@@ -16,8 +16,6 @@ router_jogos.get('/cidade-dorme', async (req, res)=>{
         const background_val = user.background[0].darkmode ? background[0].darkmode.jogos.cidade_dorme : background[0].lightmode.jogos.cidade_dorme;
         let users_icons = [];
 
-        console.log(background_val);
-
         users.forEach(user =>{
             const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
             const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
