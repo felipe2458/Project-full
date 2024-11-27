@@ -1,20 +1,3 @@
-:root {
-    --cor-fundo: #121212;
-    --cor-texto: #e0e0e0;
-    --cor-cabecalho: #1f1f1f;
-    --cor-borda-cabecalho: #333;
-    --cor-icon-user: #e0e0e0;
-    --cor-borda-icon-user: #555;
-    --cor-botao-principal: #27ae60;
-    --cor-botao-principal-hover: #2ecc71;
-    --cor-botao-principal-ativo: #1e7e4d;
-    --cor-container-users: #222;
-    --cor-scrollbar: #333;
-    --cor-scrollbar-thumb: #27ae60;
-    --cor-user-procura: #333;
-    --cor-user-procura-hover: #444;
-}
-
 *{
     margin: 0;
     padding: 0;
@@ -56,7 +39,6 @@ header .separar{
 .config{
     width: 35px;
     height: 35px;
-    background-image: url('../images/icons/settings-glyph-black-icon-png_293809-removebg-preview\ \(1\).png');
     background-size: cover;
     background-position: center;
     cursor: pointer;

@@ -18,9 +18,7 @@ $(function(){
                 processData: false,  
                 contentType: false,
                 success: function(data){
-                    setTimeout(()=>{
-                        alert('Recarregando a página para atualizar a sua foto de perfil.');
-                    }, 1000);
+                    alert('O foto pode demorar alguns segundos para ser aparecer!');
                 },
                 error: function(err) {
                     console.error('Erro no envio:', err);

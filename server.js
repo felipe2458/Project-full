@@ -3,6 +3,7 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -14,8 +15,7 @@ const io = socketIo(server);
 
 const User = require('./mongoose/User');
 const router = require('./router/routers')(io);
-const background = require('./router/config/background');
-const { match } = require('assert');
+const background = require('./config/background.json');
 
 mongoose.connect('mongodb+srv://root:q8n7MKjqbgluikbZ@cluster0.zsdig.mongodb.net/Project-full?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
     console.log("Conectado com sucesso ao MongoDB");
@@ -53,16 +53,16 @@ app.get('/', async (req, res)=>{
 
         const user = await User.findOne({ name: req.session.user });
 
-        const background_val = user.background[0].darkmode ? background[0].darkmode.home : background[0].lightmode.home
+        const background_val = user.background[0].darkmode ? background.darkmode.home : background.lightmode.home
 
-        return res.render('home.ejs', { username: req.session.user, logado: true, background_val });
+        return res.render('home/home.ejs', { username: req.session.user, logado: true, background_val });
     }else{
-        return res.render('home.ejs', { logado: false, background_val: background[0].lightmode.home });
+        return res.render('home/home.ejs', { logado: false, background_val: background[0].lightmode.home });
     }
 });
 
 app.get('/register', (req, res)=>{
-    res.render('register_user.ejs');
+    res.render('login_and_register/register_user.ejs');
 });
 
 app.post('/register', async function(req, res){
@@ -92,7 +92,7 @@ app.post('/register', async function(req, res){
 });
 
 app.get('/login', (req, res)=>{
-    res.render('login.ejs');
+    res.render('login_and_register/login.ejs');
 });
 
 app.post('/login', async (req, res)=>{
@@ -108,7 +108,7 @@ app.post('/login', async (req, res)=>{
         if(await bcrypt.compare(req.body.password_login.trim(), user.password)){
             const remember = req.body.remember === 'on';
 
-            if(await remember){
+            if(remember){
                 res.cookie('username', req.body.name_login.trim(),{
                     maxAge: 1000 * 60 * 60 * 24 * 365,
                     httpOnly: false,
@@ -212,12 +212,16 @@ io.on('connection', async (socket) => {
 
         io.emit('verificar_player', Array.from(players.values()));
     })
+
+    socket.on('player_connected_jogo_da_velha', (data)=>{
+        console.log(data)
+    });
 });
 
 app.use('/:user', router);
 
 app.use(function(req, res, next){
-    res.render('page404.ejs');
+    res.render('erros/page404.ejs');
 });
 
 server.listen(3090, ()=>{

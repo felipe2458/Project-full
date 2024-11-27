@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/public/images/icons/icon_principal.ico">
-    <link rel="stylesheet" href="/public/CSS/chat_with_user.css">
+    <link rel="stylesheet" href="/public/CSS/chat_css/chat_with_user.css">
     <%- background_val %>
     <title>Conversa com <%= friend %></title>
 </head>
@@ -35,12 +35,20 @@
                         <% if(info.message.length > 0){ %>
                             <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
                                 <p><%= info.message %></p>
+                                <div class="container-hours">
+                                    <%= info.time %>
+                                </div><!-- container-hours -->
+                                <div class="visualizado"></div>
                             </div><!-- message -->
                         <% } %>
 
-                        <% if(info.message_voice[0].data !== ''){ %>
+                        <% if(info.message_voice[0].data !== '' && info.message_voice[0].contentType !== ''){ %>
                             <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
-                                <audio controls="true" src="<%= info.message_voice[0].data %>"></audio>
+                                <audio controls class="message-envi-voice" src="<%= info.message_voice[0].data %>"></audio>
+                                <div class="container-hours">
+                                    <%= info.time %>
+                                </div><!-- container-hours -->
+                                <div class="visualizado"></div>
                             </div><!-- message -->
                         <% } %>
                     <% });
@@ -53,7 +61,12 @@
                 <div class="container-audio" style="display: none;"></div><!-- container-audio -->
                 <div class="container-inputs">
                     <input type="text" name="message" id="message" placeholder="Digite sua mensagem">
-                    <div class="message-voice" s;"></div><!-- message-voice -->
+                    <div class="message-voice">
+                        <div class="container-icone">
+                            <div class="icone-mic" style="background-image: url(/public/images/icons/microfone.svg);"></div><!-- icone-mic -->
+                            <div class="circle-red" style="display: none;"></div><!-- circle-red -->
+                        </div><!-- container-icone -->
+                    </div><!-- message-voice -->
                     <input type="submit" name="action" id="button" value="Enviar">
                 </div><!-- container-inputs -->
             </form>
@@ -67,5 +80,5 @@
     const friend = '<%= friend %>';
     const users_chat = <%- JSON.stringify(usersChat) %>;
 </script>
-<script src="/public/JS/chat_with_user.js"></script>
+<script src="/public/JS/chat_js/chat_with_user.js"></script>
 </html>

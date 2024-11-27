@@ -19,7 +19,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(../images/img.jpg);
+    background-image: url(../../images/img.jpg);
     background-size: cover;
 }
 
@@ -136,11 +136,11 @@ form .container-input .input-wraper{
     top: 50%;
     transform: translate(0, -50%);
     background-size: cover;
-    background-image: url(../images/icons/user_icon.svg);
+    background-image: url(../../images/icons/user_icon.svg);
 }
 
 .input-wraper .wraper-container-input .icon-pass{
-    background-image: url(../images/icons/view_password.svg);
+    background-image: url(../../images/icons/view_password.svg);
     cursor: pointer;
 }
 

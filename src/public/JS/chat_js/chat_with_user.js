@@ -1,9 +1,9 @@
 $(function(){
     const socket = io();
 
-    function scrollToBottom() {
+    function scrollToBottom(){
         const messageContainer = document.querySelector('.container-message');
-        if (messageContainer) {
+        if(messageContainer){
             messageContainer.scrollTop = messageContainer.scrollHeight;
         }
     }
@@ -15,6 +15,14 @@ $(function(){
     const container_audio = $('.container-audio');
 
     voiceMessage.click((e) =>{
+        $('input[type="text"]').attr('disabled', true);
+        $('input[type="text"]').val("");
+
+        if(container_audio.is(':empty')){
+            $('.circle-red').css('display', 'block');
+            $('.icone-mic').css('display', 'none');
+        }
+
         if(container_audio.is(':empty')){
             if(typeof MediaRecorder === 'undefined'){
                 alert('Seu navegador não suporta gravação de áudio');
@@ -47,7 +55,8 @@ $(function(){
                         container_audio.empty();
                         container_audio.css('display', 'flex');
                         container_audio.append(audio);
-                        $('input[type="text"]').attr('disabled', true);
+                        $('.circle-red').css('display', 'none');
+                        $('.icone-mic').css('display', 'block');
 
                         $('#form').one('submit', e => {
                             const now = new Date();
@@ -63,7 +72,7 @@ $(function(){
 
                             container_audio.empty();
                             container_audio.css('display', 'none');
-                            $('input[type="text"]').removeAttr('disabled');
+                            $('input[type="text"]').attr('disabled', false);
 
                             socket.emit('send_message', { username, friend, message, message_voice, time, day });
 
@@ -121,11 +130,19 @@ $(function(){
         if(users_chat.sort().toString() === users_chat_name.sort().toString()){
             if(message_voice.length > 0){
                 $('.message-wraper').append(`
-                    <div class="message ${messageClass}"><audio controls src="${message_voice}"></audio></div>
+                    <div class="message ${messageClass}">
+                        <audio controls class="message-envi-voice" src="${message_voice}"></audio>
+                        <div class="container-hours"><p>${data.time}</p></div>
+                        <div class="visualizado"></div>
+                    </div>
                 `);
             }else{
                 $('.message-wraper').append(`
-                    <div class="message ${messageClass}"><p>${message}</p></div>
+                    <div class="message ${messageClass}">
+                        <p>${message}</p>
+                        <div class="container-hours"><p>${data.time}</p></div>
+                        <div class="visualizado"></div>
+                    </div>
                 `);
             }
 

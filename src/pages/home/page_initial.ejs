@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../public/images/icons/icon_principal.ico">
-    <link rel="stylesheet" href="../public/CSS/page_initial.css">
+    <link rel="stylesheet" href="../public/CSS/home_css/page_initial.css">
     <%- background_val %>
     <title>Página inicial</title>
 </head>
@@ -12,7 +12,11 @@
     <header>
         <div class="separar" id="container-configuracoes">
             <a href="/<%= username.split('_').join('-') %>/configuracoes">
-                <div class="config"></div><!-- config -->
+                <% if(check_background){ %>
+                    <div class="config" style="background-image: url(/public/images/icons/settings_light.svg);"></div><!-- config -->
+                <% }else{ %>
+                    <div class="config" style="background-image: url(/public/images/icons/settings_dark.svg);"></div><!-- config -->
+                <% } %>
             </a>
         </div><!-- Separar -->
 
@@ -34,5 +38,5 @@
     </section>
 </body>
 <script src="../public/JS/JQuery.js"></script>
-<script src="../public/JS/page_initial.js"></script>
+<script src="../../public/JS/home_js/page_initial.js"></script>
 </html>
