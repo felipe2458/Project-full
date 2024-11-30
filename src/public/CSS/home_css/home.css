@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-/* Estilos do body e da página */
 body {
     font-family: Arial, sans-serif;
     background-color: var(--cor-fundo);
@@ -12,7 +11,6 @@ body {
     padding: 20px;
 }
 
-/* Estilos do título */
 h1 {
     font-size: 2rem;
     margin-bottom: 30px;
@@ -20,7 +18,6 @@ h1 {
     color: var(--cor-texto);
 }
 
-/* Estilos dos links */
 a {
     display: inline-block;
     font-size: 1.2rem;
@@ -38,7 +35,6 @@ a:hover {
     color: white;
 }
 
-/* Estilo do link com o sufixo /home */
 a[href$="/home"] {
     background-color: var(--cor-link-ativo);
 }
@@ -47,7 +43,6 @@ a[href$="/home"]:hover {
     background-color: var(--cor-link-hover);
 }
 
-/* Estilo dos links de registro e login */
 a[href$="/register"], a[href$="/login"] {
     background-color: var(--cor-secundario);
     color: #fff;
@@ -57,7 +52,6 @@ a[href$="/register"]:hover, a[href$="/login"]:hover {
     background-color: var(--cor-fundo-hover);
 }
 
-/* Responsividade */
 @media (max-width: 600px) {
     body {
         padding: 10px;
@@ -74,7 +68,6 @@ a[href$="/register"]:hover, a[href$="/login"]:hover {
     }
 }
 
-/* Estilos para links de registro e login */
 a[href$="/register"], a[href$="/login"] {
     display: inline-block;
 }

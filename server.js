@@ -15,12 +15,13 @@ const io = socketIo(server);
 
 const User = require('./mongoose/User');
 const router = require('./router/routers')(io);
-const background = require('./config/background.json');
+const background_bg = require('./config/background/bgnd.json');
+const isDarkMode = require('./config/background/background');
 
 mongoose.connect('mongodb+srv://root:q8n7MKjqbgluikbZ@cluster0.zsdig.mongodb.net/Project-full?retryWrites=true&w=majority&appName=Cluster0', {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
     console.log("Conectado com sucesso ao MongoDB");
 }).catch((err)=>{
-    console.log(err.message);
+    console.error(err.message);
 });
 
 app.use(bodyParser.json());
@@ -53,11 +54,9 @@ app.get('/', async (req, res)=>{
 
         const user = await User.findOne({ name: req.session.user });
 
-        const background_val = user.background[0].darkmode ? background.darkmode.home : background.lightmode.home
-
-        return res.render('home/home.ejs', { username: req.session.user, logado: true, background_val });
+        return res.render('home/home.ejs', { username: req.session.user, logado: true, background_val: isDarkMode(user, 'home') });
     }else{
-        return res.render('home/home.ejs', { logado: false, background_val: background[0].lightmode.home });
+        return res.render('home/home.ejs', { logado: false, background_val: background_bg.darkmode.home.style_one });   
     }
 });
 
@@ -77,8 +76,8 @@ app.post('/register', async function(req, res){
                 name: req.body.name.trim(),
                 password: pass,
                 friends: [],
-                icon: { data: null, contentType: null },
-                background: [{ darkmode: false }],
+                icon: {},
+                background: [{ darkmode: {} }],
             }).then(()=>{
                 return res.redirect('/login');
             }).catch(err =>{
@@ -213,8 +212,8 @@ io.on('connection', async (socket) => {
         io.emit('verificar_player', Array.from(players.values()));
     })
 
-    socket.on('player_connected_jogo_da_velha', (data)=>{
-        console.log(data)
+    socket.on('player_connected_jdv', (data)=>{
+        io.emit('verificar_player_jdv', data);
     });
 });
 

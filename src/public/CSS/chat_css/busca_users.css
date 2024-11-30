@@ -77,17 +77,6 @@ h2{
     color: var(--color-primary-hover);
 }
 
-.add-friend label[title="remover"]{
-    background-color: var(--color-remove);
-    border-color: var(--color-remove);
-    color: var(--color-primary-hover);
-}
-
-.add-friend label[title="remover"]:hover{
-    background-color: var(--color-remove-hover);
-    border-color: var(--color-remove-hover);
-}
-
 @media (max-width: 768px){
     .container-users{
         grid-template-columns: 1fr 1fr;

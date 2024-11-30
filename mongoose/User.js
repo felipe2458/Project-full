@@ -6,21 +6,25 @@ const userSchema = new Schema({
     name: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     friends: [{ type: String, required: true }],
-    icon: [{
-        data: { type: Buffer, required: false },
-        contentType: { type: String, required: false }
-    }],
+    icon: {
+        data: { type: Buffer, required: false, default: null },
+        contentType: { type: String, required: false, default: null }
+    },
     background: [{
-        darkmode: { type: Boolean, required: true }
+        darkmode: {
+            isChecked: { type: Boolean, required: false, default: false },
+            personalized: { type: Boolean, required: false, default: false },
+            style: { type: String, required: false, default: () => 'one' },
+        }
     }],
     chats: [{
         users: [{ type: String, required: false }],
         messages: [{
             messageFrom: { type: String, required: false },
-            message_voice: [{
+            message_voice: {
                 data: { type: Buffer, required: false, default: ''},
                 contentType: { type: String, required: false, default: '' }
-            }],
+            },
             message: { type: String, required: false, default: '' },
             time: { type: String, required: false },
             day: { type: String, required: false }

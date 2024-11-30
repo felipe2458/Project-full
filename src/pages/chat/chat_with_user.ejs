@@ -42,9 +42,9 @@
                             </div><!-- message -->
                         <% } %>
 
-                        <% if(info.message_voice[0].data !== '' && info.message_voice[0].contentType !== ''){ %>
+                        <% if(info.message_voice.data !== '' && info.message_voice.contentType !== ''){ %>
                             <div class="message <%= info.messageFrom === username ? 'own-message' : 'other-message' %>">
-                                <audio controls class="message-envi-voice" src="<%= info.message_voice[0].data %>"></audio>
+                                <audio controls class="message-envi-voice" src="<%= info.message_voice.data %>"></audio>
                                 <div class="container-hours">
                                     <%= info.time %>
                                 </div><!-- container-hours -->

@@ -17,8 +17,8 @@ router_config.post('/upload-icon', upload.single('photo_icon'), async (req, res)
             return res.status(404).send('Usuário não encontrado.');
         }
 
-        user.icon[0].data = req.file.buffer;
-        user.icon[0].contentType = req.file.mimetype;
+        user.icon.data = req.file.buffer;
+        user.icon.contentType = req.file.mimetype;
 
         user.save();
 
@@ -33,7 +33,9 @@ router_config.post('/background', async (req, res)=>{
     try{
         const user = await User.findOne({ name: req.session.user });
 
-        user.background[0].darkmode = req.body.darkmode;
+        user.background[0].darkmode.isChecked = req.body.darkmode;
+        user.background[0].darkmode.personalized = req.body.personalizedIsChecked;
+        user.background[0].darkmode.style = req.body.personalized;
 
         user.save();
 

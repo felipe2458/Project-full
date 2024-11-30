@@ -7,18 +7,18 @@ const server = http.createServer(app);
 
 const User = require('../mongoose/User');
 
-const background = require('../config/background');
+const background_bg = require('../config/background/bgnd.json');
+const isDarkMode = require('../config/background/background');
 
 router_jogos.get('/cidade-dorme', async (req, res)=>{
     if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
         const users = await User.find({});
         const user = await User.findOne({ name: req.session.user });
-        const background_val = user.background[0].darkmode ? background.darkmode.jogos.cidade_dorme : background.lightmode.jogos.cidade_dorme;
         let users_icons = [];
 
         users.forEach(user =>{
-            const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
-            const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
+            const base64Image =  user.icon.data ? user.icon.data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${user.icon.contentType};base64,${base64Image}` : false;
 
             users_icons.push({ name: user.name, icon: imageSrc });
         });
@@ -26,7 +26,7 @@ router_jogos.get('/cidade-dorme', async (req, res)=>{
         res.render('jogos/cidade_dorme.ejs', { 
             username: req.session.user, 
             users_icons,
-            background_val,
+            //background_val: isDarkMode(user, 'cidade_dorme'),
         });
     }else{
         return res.redirect('/login');
@@ -40,8 +40,8 @@ router_jogos.get('/jogo-da-velha', async (req, res)=>{
         let users_icons = [];
 
         users.forEach(user =>{
-            const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
-            const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
+            const base64Image =  user.icon.data ? user.icon.data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${user.icon.contentType};base64,${base64Image}` : false;
 
             users_icons.push({ name: user.name, icon: imageSrc });
         });

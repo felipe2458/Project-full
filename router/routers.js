@@ -4,22 +4,22 @@ const router_jogos = require('./router_jogos');
 
 const User = require('../mongoose/User');
 
-const background = require('../config/background');
+const background_bg = require('../config/background/bgnd.json');
+const isDarkMode = require('../config/background/background');
 
 module.exports = (io)=>{
     router.get('/home', async (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
             const user = await User.findOne({ name: req.session.user });
 
-            const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
-            const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : null;
-            const background_val = user.background[0].darkmode ? background.darkmode.page_initial : background.lightmode.page_initial;
+            const base64Image =  user.icon.data ? user.icon.data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${user.icon.contentType};base64,${base64Image}` : null;
 
             return res.render('home/page_initial.ejs', { 
                 username: req.session.user,
                 image: imageSrc,
-                background_val,
-                check_background: user.background[0].darkmode
+                background_val: isDarkMode(user, 'page_initial'),
+                check_background: user.background[0].darkmode.isChecked
             });
         }else{
             return res.redirect('/login');
@@ -29,15 +29,16 @@ module.exports = (io)=>{
     router.get('/configuracoes', async (req, res)=>{
         if(req.session.user && req.session.user.split('_').join('-') === req.params.user){
             const user = await User.findOne({ name: req.session.user });
-            const base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
-            const imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
-            const background_val = user.background[0].darkmode ? background.darkmode.config_user : background.lightmode.config_user;
+            const base64Image =  user.icon.data ? user.icon.data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${user.icon.contentType};base64,${base64Image}` : false;
 
             return res.render('home/config_user.ejs', { 
                 username: req.session.user, 
                 image: imageSrc,
-                background_val,
-                background_check: user.background[0].darkmode
+                background_val: isDarkMode(user, 'config_user'),
+                background_check: user.background[0].darkmode.isChecked,
+                personalized: user.background[0].darkmode.personalized,
+                style: user.background[0].darkmode.style,
             });
         }else{
             return res.redirect('/login');
@@ -49,14 +50,13 @@ module.exports = (io)=>{
             const users = await User.find({});
             const user = await User.findOne({ name: req.session.user });
             const friends = user.friends;
-            const background_val = user.background[0].darkmode ? background.darkmode.chat : background.lightmode.chat;
 
             let usersList = [];
             let friendsList = [];
 
             users.forEach(async (user) =>{
-                let base64Image =  user.icon[0].data ? user.icon[0].data.toString('base64') : false;
-                let imageSrc = base64Image ? `data:${user.icon[0].contentType};base64,${base64Image}` : false;
+                let base64Image =  user.icon.data ? user.icon.data.toString('base64') : false;
+                let imageSrc = base64Image ? `data:${user.icon.contentType};base64,${base64Image}` : false;
 
                 usersList.push(user.name);
 
@@ -64,7 +64,6 @@ module.exports = (io)=>{
                     friendsList.push({
                         name: user.name,
                         image: imageSrc,
-                        background_val
                     })
                 }
             });
@@ -73,7 +72,7 @@ module.exports = (io)=>{
                 username: req.session.user, 
                 usersList, 
                 friendsList,
-                background_val
+                background_val: isDarkMode(user, 'chat'),
             });
         }else{
             return res.redirect('/login');
@@ -86,10 +85,9 @@ module.exports = (io)=>{
             const friend = await User.findOne({ name: req.params.friend.split('-').join('_') });
             let chat_ejs = await user.chats.find(chat => chat.users.includes(req.session.user) && chat.users.includes(friend.name));
             const chat_friend = await friend.chats.find(chat => chat.users.includes(req.session.user) && chat.users.includes(friend.name));
-            const background_val = user.background[0].darkmode ? background.darkmode.chat_with_user : background.lightmode.chat_with_user;
 
-            const base64Image =  friend.icon[0].data ? friend.icon[0].data.toString('base64') : false;
-            const imageSrc = base64Image ? `data:${friend.icon[0].contentType};base64,${base64Image}` : false;
+            const base64Image =  friend.icon.data ? friend.icon.data.toString('base64') : false;
+            const imageSrc = base64Image ? `data:${friend.icon.contentType};base64,${base64Image}` : false;
 
             if(!chat_ejs){
                 user.chats.push({
@@ -116,7 +114,7 @@ module.exports = (io)=>{
                 image: imageSrc, 
                 chat: chat_ejs.messages, 
                 usersChat: chat_ejs.users,
-                background_val
+                background_val: isDarkMode(user, 'chat_with_user'),
             });
         }else{
             return res.redirect('/login');
@@ -160,14 +158,12 @@ module.exports = (io)=>{
                         return res.redirect('/login');
                     }
 
-                    const background_val = result.background[0].darkmode ? background.darkmode.buscar_user : background.lightmode.buscar_user;
-
                     return res.render('chat/busca_users.ejs', { 
                         username: req.session.user, 
                         usersList: buscarUser(), 
                         friends: result.friends,
                         query: req.query.username,
-                        background_val
+                        background_val: isDarkMode(result, 'buscar_user'),
                     });
                 }).catch((err)=>{
                     console.error('Erro ao buscar os amigos:', err);

@@ -1,3 +1,4 @@
+
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -17,7 +18,7 @@
                 <div class="container-icon-user">
                     <form id="envi_photo_icon" accept="image/*" enctype="multipart/form-data">
                         <div class="container-err">
-                            <div class="user-icon" style="background-image: url('<%= image ? image : '/public/user_icons/iconDefault/icon-padrão.webp' %>');"></div><!-- user-icon -->
+                            <div class="user-icon" style="background-image: url(<%= image ? image : '/public/user_icons/iconDefault/icon-padrão.webp' %>);"></div><!-- user-icon -->
                             <input type="file" name="photo_icon" id="photo_icon" accept="image/*" style="display: none;">
                             <label for="photo_icon">Selecione uma foto</label>
                         </div><!-- container-err -->
@@ -40,6 +41,131 @@
                                         <span>Darkmode</span> 
                                     </label>
                                 </div><!-- container-button-darkmode -->
+
+                                <div class="container-button-personalizado">
+                                    <input type="checkbox" name="personalizado" style="display: none;" id="personalizado" <% if(personalized){ %> checked <% } %>>
+                                    <label for="personalizado">
+                                        <div class="button">
+                                            <div class="circle"></div><!-- circle -->
+                                        </div><!-- button -->
+                                        <span>Personalizado</span>
+                                    </label>
+                                </div><!-- container-button-personalized -->
+
+                                <div class="container-options" <% if(personalized){  %> style="display: flex;" <% }else{ %> style="display: none;" <% } %>>
+                                    <% if(background_check){ %>
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_one" style="display: none;" <% if(style === 'one'){ %> checked <% } %>>
+                                            <label for="background_personalized_one">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_one_one" style="background-color: #121212;"></div><!-- style -->
+                                                    <div class="style" id="style_one_two" style="background-color: #333;"></div><!-- style -->
+                                                    <div class="style" id="style_one_three" style="background-color: #4caf50;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+    
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_two" style="display: none;" <% if(style === 'two'){ %> checked <% } %>>
+                                            <label for="background_personalized_two">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_two_one" style="background-color: #181818;"></div><!-- style -->
+                                                    <div class="style" id="style_two_two" style="background-color: #2c2c2c;"></div><!-- style -->
+                                                    <div class="style" id="style_two_three" style="background-color: #ff4500;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+    
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_three" style="display: none;" <% if(style === 'three'){ %> checked <% } %>>
+                                            <label for="background_personalized_three">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_three_one" style="background-color: #121212;"></div><!-- style -->
+                                                    <div class="style" id="style_three_two" style="background-color: #333333;"></div><!-- style -->
+                                                    <div class="style" id="style_three_three" style="background-color: #76c7c0;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+    
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_four" style="display: none;" <% if(style === 'four'){ %> checked <% } %>>
+                                            <label for="background_personalized_four">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_four_one" style="background-color: #1c1c1c;"></div><!-- style -->
+                                                    <div class="style" id="style_four_two" style="background-color: #2d2d2d;"></div><!-- style -->
+                                                    <div class="style" id="style_four_three" style="background-color: #9e78ff;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+    
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_five" style="display: none;" <% if(style === 'five'){ %> checked <% } %>>
+                                            <label for="background_personalized_five">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_five_one" style="background-color: #0d0d0d;"></div><!-- style -->
+                                                    <div class="style" id="style_five_two" style="background-color: #262626;"></div><!-- style -->
+                                                    <div class="style" id="style_five_three" style="background-color: #007b8a;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+                                    <% }else{ %>
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_one" style="display: none;" <% if(style === 'one'){ %> checked <% } %>>
+                                            <label for="background_personalized_one">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_one_one" style="background-color: #e0e0e0;"></div><!-- style -->
+                                                    <div class="style" id="style_one_two" style="background-color: #d0d0d0;"></div><!-- style -->
+                                                    <div class="style" id="style_one_three" style="background-color: #47b64b;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+                                        
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_two" style="display: none;" <% if(style === 'two'){ %> checked <% } %>>
+                                            <label for="background_personalized_two">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_two_one" style="background-color: #f0f0f0;"></div><!-- style -->
+                                                    <div class="style" id="style_two_two" style="background-color: #e8e8e8;"></div><!-- style -->
+                                                    <div class="style" id="style_two_three" style="background-color: #ff6347;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+                                        
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_three" style="display: none;" <% if(style === 'three'){ %> checked <% } %>>
+                                            <label for="background_personalized_three">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_three_one" style="background-color: #f0f0f0;"></div><!-- style -->
+                                                    <div class="style" id="style_three_two" style="background-color: #e8e8e8;"></div><!-- style -->
+                                                    <div class="style" id="style_three_three" style="background-color: #76c7c0;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+                                        
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_four" style="display: none;" <% if(style === 'four'){ %> checked <% } %>>
+                                            <label for="background_personalized_four">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_four_one" style="background-color: #f0f0f0;"></div><!-- style -->
+                                                    <div class="style" id="style_four_two" style="background-color: #e8e8e8;"></div><!-- style -->
+                                                    <div class="style" id="style_four_three" style="background-color: #c5a3ff;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+                                        
+                                        <div class="option-wraper">
+                                            <input type="radio" name="background" id="background_personalized_five" style="display: none;" <% if(style === 'five'){ %> checked <% } %>>
+                                            <label for="background_personalized_five">
+                                                <div class="box-background">
+                                                    <div class="style" id="style_five_one" style="background-color: #f0f0f0;"></div><!-- style -->
+                                                    <div class="style" id="style_five_two" style="background-color: #e8e8e8;"></div><!-- style -->
+                                                    <div class="style" id="style_five_three" style="background-color: #4fa3d1;"></div><!-- style -->
+                                                </div><!-- box-background -->
+                                            </label>
+                                        </div><!-- option-wraper -->
+                                        
+                                    <% } %>
+                                </div><!-- container-options -->
                             </div><!-- config-background -->
                         </div><!-- config-background-wraper -->
                     </div><!-- container-config-background -->
@@ -51,7 +177,7 @@
 
         <div class="clear"></div><!-- clear -->
 
-        <script src="/public/JS/JQuery.js"></script>
-        <script src="/public/JS/home_js/config_user.js"></script>
     </body>
+    <script src="/public/JS/JQuery.js"></script>
+    <script src="/public/JS/home_js/config_user.js"></script>
 </html>

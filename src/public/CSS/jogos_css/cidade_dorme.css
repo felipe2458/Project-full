@@ -35,7 +35,7 @@ body {
 
 .user-wraper:hover {
     transform: translateY(-20px);
-    background-color: rgb(3, 180, 127);
+    background-color: var(--color-bg-hover);
     box-shadow: 0 4px 12px var(--color-shadow-hover);
 }
 
