@@ -1,0 +1,149 @@
+.container{
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.container form{
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  border-radius: 20px;
+  box-shadow: 0 0 5px #8f8f8f;
+  backdrop-filter: blur(15px);
+  color: whitesmoke;
+}
+
+
+.container form header{
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container form header h1{
+  font-size: 40px;
+  font-weight: normal;
+}
+
+form .container-inputs{
+  width: 100%;
+  height: calc(100% - 100px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form .container-inputs .input-text-wraper{
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 35px;
+}
+
+form .container-inputs .input-wraper, form .container-inputs .input-submit{
+  width: 80%;
+  height: 50px;
+  position: relative;
+}
+
+form .container-inputs .input-wraper .input{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+}
+
+.container-inputs .input-wraper .input input{
+  width: 100%;
+  height: 85%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  position: absolute;
+  padding: 0 45px 0 20px;
+  border-radius: 20px;
+  font-size: 18px;
+  transition: color 0.3s, box-shadow 0.3s;
+}
+
+.container-inputs .input-wraper .input label{
+  margin-left: 20px;
+  font-size: 18px;
+  transition: margin-top 0.3s;
+}
+
+.container-inputs .input-wraper .input .icon{
+  height: 25px;
+  width: 25px;
+  background-size: cover;
+  position: absolute;
+  right: 5%;
+  cursor: pointer;
+}
+
+.container-inputs .input-wraper .input .icon.ativado:not(.user)::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 20px;
+  background-color: white;
+  transform: translateX(200%) translateY(10%) rotateZ(12deg);
+}
+
+.container-inputs .input-wraper .container-erro{
+  width: 100%;
+  position: absolute;
+  bottom: -15px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+}
+
+.container-inputs .input-wraper .container-erro p{
+  color: red;
+  text-shadow: 0 0 2px red, 0 0 4px red;
+}
+
+form .container-inputs .input-submit input[type="submit"]{
+  width: 100%;
+  height: 80%;
+  background-color: whitesmoke;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  color: black;
+  font-family: "Open Sans", sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+form .container-inputs .input-submit input[type="submit"]:hover{
+  transform: scale(1.06);
+}
+
+.container-inputs .container-redirect-login{
+  padding: 18px
+}
+
+.container-inputs .container-redirect-login p a{
+  color: wheat;
+  text-decoration: none;
+}
+
+.container-inputs .container-redirect-login p a:hover{
+  text-decoration: underline;
+}

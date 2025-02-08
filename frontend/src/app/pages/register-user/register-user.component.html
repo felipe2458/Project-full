@@ -1,0 +1,68 @@
+<div class="container" style="background-image: url('img.jpg');">
+  <form (submit)="enviForm($event)" action="/login">
+    <header>
+      <h1>Register</h1>
+    </header>
+
+    <div class="container-inputs">
+      <div class="input-text-wraper">
+        <div class="input-wraper">
+          <div class="input">
+            <input type="text" [(ngModel)]="username" (focus)="focusInput('username')" (blur)="blurInput('username', username)" [ngStyle]="{ 'box-shadow': '0 0 3px' + color_username, 'color': color_username }" (input)="Input(10, 100, username, 'username')" name="username" id="username">
+            <label for="username" [ngStyle]="{ 'margin-top': topLabel_username }">Username</label>
+            <div class="icon user" style="background-image: url('icons/user_icon.svg');"></div><!-- icon -->
+          </div><!-- input -->
+
+          <div class="container-erro">
+            @if(erro_username){
+              <p>Username must be between 3 and 100 characters</p>
+            }@else if(erro_submit_username){
+              <p>the field cannot be empty</p>
+            }
+          </div><!-- contaienr-erro -->
+        </div><!-- input-wraper -->
+
+        <div class="input-wraper">
+          <div class="input">
+            <input [type]="type_password ? 'text' : 'password'" [(ngModel)]="password"  (focus)="focusInput('password')" (blur)="blurInput('password', password)" [ngStyle]="{ 'box-shadow': '0 0 3px' + color_password, 'color': color_password }"  (input)="passInput(8, 50, password, 'password')" name="password" id="password">
+            <label for="password" [ngStyle]="{ 'margin-top': topLabel_password }">Password</label>
+            <div class="icon" [ngClass]="{ 'ativado': type_password }" (click)="viewPass('password')" style="background-image: url('icons/view_password.svg');"></div><!-- icon -->
+          </div><!-- input -->
+
+          <div class="container-erro">
+            @if(erro_password){
+              <p>The password must be between 8 and 50 characters</p>
+            }@else if(erro_confirmPass){
+              <p>Passwords don't match</p>
+            }@else if(erro_submit_password){
+              <p>the field cannot be empty</p>
+            }
+          </div><!-- contaienr-erro -->
+        </div><!-- input-wraper -->
+
+        <div class="input-wraper">
+          <div class="input">
+            <input [type]="type_confirmPass ? 'text' : 'password'" [(ngModel)]="confirmPass" (focus)="focusInput('confirmPass')" (blur)="blurInput('confirmPass', confirmPass)" [ngStyle]="{ 'box-shadow': '0 0 3px' + color_confirmPass, 'color': color_confirmPass }" (input)="passInput(8, 50, confirmPass, 'confirmPass')" name="confirmPass" id="confirmPass">
+            <label for="confirmPass" [ngStyle]="{ 'margin-top': topLabel_confirmPass }">Confirm Password</label>
+            <div class="icon" [ngClass]="{ 'ativado': type_confirmPass }" (click)="viewPass('confirmPass')" style="background-image: url('icons/view_password.svg');"></div><!-- icon -->
+          </div><!-- input -->
+
+          <div class="container-erro">
+            @if(erro_confirmPass){
+              <p>Passwords don't match</p>
+            }@else if(erro_submit_confirmPass){
+              <p>the field cannot be empty</p>
+            }
+          </div><!-- contaienr-erro -->
+        </div><!-- input-wraper -->
+      </div><!-- input-text-wraper -->
+
+      <div class="input-submit">
+        <input type="submit" value="Create">
+      </div><!-- input-submit -->
+      <div class="container-redirect-login">
+        <p>Already have an account? <a routerLink="/login">Login</a></p>
+      </div><!-- container-redirect-login -->
+    </div><!-- container-inputs -->
+  </form>
+</div><!-- container -->
