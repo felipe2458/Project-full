@@ -14,7 +14,9 @@
           </div><!-- input -->
 
           <div class="container-erro">
-            @if(erro_username){
+            @if(erro_userExists){
+              <p>Username already exists</p>
+            }@else if(erro_username){
               <p>Username must be between 3 and 100 characters</p>
             }@else if(erro_submit_username){
               <p>the field cannot be empty</p>

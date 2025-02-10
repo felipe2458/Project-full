@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { ApiService } from '../../services/api/api.service';
 
 @Component({
@@ -23,6 +22,7 @@ export class RegisterUserComponent {
   color_confirmPass: string = '#8f8f8f';
 
   erro_username: boolean = false;
+  erro_userExists: boolean = false;
   erro_password: boolean = false;
   erro_confirmPass: boolean = false;
 
@@ -48,6 +48,9 @@ export class RegisterUserComponent {
         this[`color_${field}`] = '#8f8f8f';
       }
     } else {
+      if(field === 'username'){
+        this.erro_userExists = false
+      }
       this[`erro_${field}`] = false;
       this[`color_${field}`] = '#00e000';
     }
@@ -99,10 +102,16 @@ export class RegisterUserComponent {
       this.erro_submit_confirmPass = true;
     }
 
-    if(!this.erro_submit_username && !this.erro_submit_password && !this.erro_submit_confirmPass){
-      this.api.setUser({ name: this.username, password: this.password });
-
-      this.router.navigate(['/login']);
+    if(!this.erro_submit_username && !this.erro_submit_password && !this.erro_submit_confirmPass && !this.erro_username && !this.erro_password && !this.erro_confirmPass){
+      this.api.register({ username: this.username, password: this.password }).subscribe({
+        next: () => this.router.navigate(['/login']),
+        error: error => {
+          if(error.status === 400){
+            this.erro_userExists = true;
+            this.color_username = '#a10000';
+          }
+        }
+      });
     }
   }
 

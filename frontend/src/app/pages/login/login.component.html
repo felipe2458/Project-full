@@ -1,1 +1,52 @@
-<p>login works!</p>
+<div class="container">
+  <form (submit)="enviForm($event)">
+    <header>
+      <h1>Login</h1>
+    </header>
+
+    <div class="container-inputs">
+      <div class="input-wraper">
+        <input type="text" id="username" name="username" (input)="Input('username')" (focus)="focusInput('username')" (blur)="blurInput('username')" [(ngModel)]="username">
+        <div class="container-label">
+          <label for="username" [ngStyle]="{ 'top': topLabel_username }">Username</label>
+        </div><!-- container-label -->
+      </div><!-- input-wraper -->
+
+      <div class="container-erro">
+        <div class="erro">
+          <p [ngStyle]="{ 'opacity': erro_username_empty ? '1' : '0' }">Username cannot be empty</p>
+          <p class="user-notfound" [ngStyle]="{ 'opacity': erro_user_notfound ? '1' : '0' }">User not found</p>
+        </div><!-- erro -->
+      </div><!-- container-erro -->
+
+      <div class="input-wraper">
+        <input type="password" id="password" name="password" (input)="Input('password')" (focus)="focusInput('password')" (blur)="blurInput('password')" [(ngModel)]="password">
+        <div class="container-label">
+          <label for="password" [ngStyle]="{ 'top': topLabel_password }">Password</label>
+        </div><!-- container-label -->
+      </div><!-- input-wraper -->
+
+      <div class="container-erro">
+        <div class="erro">
+          <p [ngStyle]="{ 'opacity': erro_password_empty ? '1' : '0' }">Password cannot be empty</p>
+          <p class="password-incorrect" [ngStyle]="{ 'opacity': erro_password_incorrect ? '1' : '0' }">Password incorrect</p>
+        </div><!-- erro -->
+      </div><!-- container-erro -->
+
+      <div class="container-submit">
+        <div class="rememberMe">
+          <input type="checkbox" id="rememberMe">
+          <label for="rememberMe">Remember me</label>
+        </div><!-- rememberMe -->
+
+        <div class="submit-wraper">
+          <input type="submit" value="Login">
+        </div><!-- submit-wraper -->
+
+        <div class="register">
+          <p>Don't have an account? <a routerLink="/register">Sing up</a></p>
+        </div><!-- register -->
+      </div><!-- container-subimit -->
+    </div><!-- container-inputs -->
+  </form>
+</div><!-- container -->

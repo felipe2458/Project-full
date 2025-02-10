@@ -6,3 +6,7 @@ export interface inputs{
   menorQue: number;
   maiorQue: number;
 }
+
+export interface JwtPlayoad{
+  exp?: number;
+}

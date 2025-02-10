@@ -9,9 +9,11 @@ export class ApiService {
 
   apiUrl = 'http://localhost:3090';
 
-  setUser(dados: { name: string, password: string }){
-    return this.http.post(`${this.apiUrl}/register`, dados).subscribe(response =>{
-      console.log(response);
-    });
+  register(user: { username: string, password: string }){
+    return this.http.post(`${this.apiUrl}/register`, user);
+  }
+
+  login(user: { username: string, password: string }){
+    return this.http.post(`${this.apiUrl}/login`, user);
   }
 }
