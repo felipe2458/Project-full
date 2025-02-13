@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api/api.service';
 import { AuthService } from '../../services/auth/auth.service';
-import { authGuard } from '../../guards/auth.guard';
+import { authGuard } from '../../guards/auth/auth.guard';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +30,11 @@ export class LoginComponent {
   Input(input: 'username' | 'password') {
     if(this[`${input}`].trim().length !== 0){
       this[`erro_${input}_empty`] = false;
+      if(input === 'username'){
+        this.erro_user_notfound = false;
+      }else{
+        this.erro_password_incorrect = false;
+      }
     }else if(input === 'username'){
       this.erro_user_notfound = false;
     }else if(input === 'password'){
