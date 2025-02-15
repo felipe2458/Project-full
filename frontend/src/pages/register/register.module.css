@@ -1,0 +1,123 @@
+.container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../../assets/img.jpg');
+    background-size: cover;
+    font-family: "Open Sans", sans-serif;
+}
+
+.container form{
+    width: 500px;
+    height: 500px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 5px #8f8f8f;
+    border-radius: 20px;
+    color: white;
+}
+
+.container form header{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container form header h1{
+    font-size: 40px;
+    font-weight: 400;
+}
+
+.container form .container_inputs{
+    width: 100%;
+    height: calc(100% - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 45px;
+    padding-top: 5%;
+}
+
+.container form .container_inputs .input_wraper{
+    width: 80%;
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.container form .container_inputs .input_wraper input{
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    box-shadow: 0 0 3px #8f8f8f;
+    position: absolute;
+    padding: 0 45px 0 20px;
+    color: whitesmoke;
+    font-size: 18px;
+}
+
+.container form .container_inputs .input_wraper label{
+    padding-left: 20px;
+    font-size: 18px;
+}
+
+.container form .container_inputs .input_wraper .container_icon{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 18px;
+}
+
+.container form .container_inputs .input_wraper .container_icon .icon{
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.container form .container_inputs .input_wraper .icon:not(#icon_username){
+    cursor: pointer;
+}
+
+.container form .container_inputs .input_submit{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.container form .container_inputs .input_submit input{
+    width: 80%;
+    height: 100%;
+    border-radius: 20px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-family: "Open Sans", sans-serif;
+}
+
+.container form .container_inputs .login{
+    width: 100%;
+    height: 50px;
+    margin-top: -35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container form .container_inputs .login .link{
+    color: wheat;
+    text-decoration: none;
+}
+
+.container form .container_inputs .login .link:hover{
+    text-decoration: underline;
+}
