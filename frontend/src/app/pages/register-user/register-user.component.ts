@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api/api.service';
+import { toArray } from 'rxjs';
 
 @Component({
   selector: 'app-register-user',
@@ -11,7 +12,15 @@ import { ApiService } from '../../services/api/api.service';
   styleUrl: './register-user.component.css'
 })
 export class RegisterUserComponent {
-  constructor(private router: Router, private api: ApiService) { }
+  constructor(private router: Router, private api: ApiService) {
+    this.api.getUsers().subscribe(response => {
+      response.forEach(user => {
+        this.usersExist.push(user.username);
+      });
+    })
+  }
+
+  usersExist: string[] = [];
 
   username: string = '';
   password: string = '';
@@ -38,18 +47,27 @@ export class RegisterUserComponent {
   erro_submit_confirmPass: boolean = false;
 
   Input(min: number, max: number, identify: string, field: 'username' | 'password' | 'confirmPass') {
-    if (identify.trim().length <= min || identify.length >= max) {
-      if (identify.trim().length !== 0) {
+    if(identify.trim().length <= min || identify.length >= max){
+      if(identify.trim().length !== 0){
         this[`erro_${field}`] = true;
         this[`erro_submit_${field}`] = false;
         this[`color_${field}`] = '#a10000';
-      } else {
+      }else{
+        if(field === 'username'){
+          if(this.erro_userExists) this.erro_userExists = false;
+        }
+
         this[`erro_${field}`] = false;
         this[`color_${field}`] = '#8f8f8f';
       }
-    } else {
+    }else{
       if(field === 'username'){
-        this.erro_userExists = false
+        this.erro_userExists = this.usersExist.includes(identify.trim());
+
+        if(this.erro_userExists){
+          this.color_username = '#a10000';
+          return;
+        }
       }
       this[`erro_${field}`] = false;
       this[`color_${field}`] = '#00e000';
@@ -93,17 +111,17 @@ export class RegisterUserComponent {
     }
 
     if(this.password.trim().length < 8 || this.password.trim().length > 50){
-      e.preventDefault();
       this.erro_submit_password = true;
+      e.preventDefault();
     }
 
     if(this.confirmPass.trim().length < 8 || this.confirmPass.trim().length > 50){
-      e.preventDefault();
       this.erro_submit_confirmPass = true;
+      e.preventDefault();
     }
 
     if(!this.erro_submit_username && !this.erro_submit_password && !this.erro_submit_confirmPass && !this.erro_username && !this.erro_password && !this.erro_confirmPass){
-      this.api.register({ username: this.username, password: this.password }).subscribe({
+      this.api.register({ username: this.username.trim(), password: this.password.trim() }).subscribe({
         next: () => this.router.navigate(['/login']),
         error: error => {
           if(error.status === 400){
@@ -114,5 +132,4 @@ export class RegisterUserComponent {
       });
     }
   }
-
 }

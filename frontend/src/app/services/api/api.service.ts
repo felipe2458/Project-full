@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,11 @@ export class ApiService {
 
   login(user: { username: string, password: string }){
     return this.http.post(`${this.apiUrl}/login`, user);
+  }
+
+
+  getUsers(): Observable<{ username: string }[]>{
+    return this.http.get<{ username: string }[]>(`${this.apiUrl}/users`);
   }
 
   getDados(url: string){

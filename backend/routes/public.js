@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 router.post('/register', async (req, res)=>{
     try{
         const user = req.body;
-        const userExists = await prisma.user.findUnique({ where: { username: user.username } })
+        const userExists = await prisma.user.findUnique({ where: { username: user.username.trim() } })
 
         if(userExists){
             return res.status(400).json({message: "Usuário já cadastrado"})
@@ -21,7 +21,7 @@ router.post('/register', async (req, res)=>{
 
         const userDb = await prisma.user.create({
             data: {
-                username: user.username,
+                username: user.username.trim(),
                 password: hashPassword
             }
         })
@@ -55,6 +55,23 @@ router.post('/login', async (req, res)=>{
     }catch(err){
         console.log(err)
         res.status(500).json({message: "Erro ao logar"})
+    }
+})
+
+router.get('/users', async (req, res)=>{
+    try{
+        const users = await prisma.user.findMany({
+            select:{
+                id: false,
+                username: true,
+                password: false
+            }
+        })
+
+        return res.json(users)
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message: "Erro ao buscar usuários"})
     }
 })
 
