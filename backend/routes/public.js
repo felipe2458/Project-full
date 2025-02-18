@@ -1,16 +1,19 @@
 import express from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client';
+import mongoose from 'mongoose'
+import User from '../DB/User.js'
+import dotenv from 'dotenv';
 
-const prisma = new PrismaClient();
+dotenv.config();
+
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/register', async (req, res)=>{
     try{
         const user = req.body;
-        const userExists = await prisma.user.findUnique({ where: { username: user.username.trim() } })
+        const userExists = await User.findOne({ username: user.username.trim() });
 
         if(userExists){
             return res.status(400).json({message: "Usuário já cadastrado"})
@@ -19,14 +22,14 @@ router.post('/register', async (req, res)=>{
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(user.password, salt)
 
-        const userDb = await prisma.user.create({
-            data: {
-                username: user.username.trim(),
-                password: hashPassword
-            }
+
+        User.create({
+            _id: new mongoose.Types.ObjectId(),
+            username: user.username.trim(),
+            password: hashPassword
         })
 
-        return res.status(201).json(userDb)
+        return res.status(201).json({ message: "Cadastro realizado com sucesso" })
     }catch(err){
         console.log(err)
         res.status(500).json({message: "Erro ao cadastrar"})
@@ -37,7 +40,7 @@ router.post('/login', async (req, res)=>{
     try{
         const userInfo = req.body;
 
-        const user = await prisma.user.findUnique({ where: { username: userInfo.username } })
+        const user = await User.findOne({ username: userInfo.username });
         
         if(!user){
             return res.status(404).json({message: "Usuário não encontrado"})
@@ -60,13 +63,7 @@ router.post('/login', async (req, res)=>{
 
 router.get('/users', async (req, res)=>{
     try{
-        const users = await prisma.user.findMany({
-            select:{
-                id: false,
-                username: true,
-                password: false
-            }
-        })
+        const users = await User.find().select("username");
 
         return res.json(users)
     }catch(err){
