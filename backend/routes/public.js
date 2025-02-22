@@ -26,7 +26,15 @@ router.post('/register', async (req, res)=>{
         User.create({
             _id: new mongoose.Types.ObjectId(),
             username: user.username.trim(),
-            password: hashPassword
+            password: hashPassword,
+            chat: [],
+            friendRequests: {
+                pending: {
+                    sentTo: [],
+                    receivedFrom: []
+                },
+                accepted: []
+            }
         })
 
         return res.status(201).json({ message: "Cadastro realizado com sucesso" })
@@ -53,6 +61,7 @@ router.post('/login', async (req, res)=>{
         }
 
         const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '7d' })
+        req.token = token;
 
         res.status(200).json(token)
     }catch(err){
