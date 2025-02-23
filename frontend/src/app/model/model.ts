@@ -9,4 +9,5 @@ export interface inputs{
 
 export interface JwtPlayoad{
   exp?: number;
+  username?: string;
 }
